@@ -6,7 +6,7 @@ import LiveKitWebRTC
 import OpenAPIURLSession
 import OpenAPIRuntime
 
-class Calls{
+public class Calls{
     
     let transport: ClientTransport = URLSessionTransport()
     
