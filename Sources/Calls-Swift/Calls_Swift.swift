@@ -51,7 +51,9 @@ public class Calls{
         var req = Components.Schemas.NewSessionRequest()
         req.sessionDescription?.sdp = sdp
         req.sessionDescription?._type = .offer
-        let d = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: "[String: Any?]")
+        
+        let c = OpenAPIRuntime.OpenAPIValueContainer.init(stringLiteral: "")
+        let d = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: c)
         let response = try? await client.newSession(.init(path: path, body:.json(d)))
         switch response {
         case .created(let created):
