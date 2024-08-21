@@ -12,7 +12,7 @@ public class STM{
     
     public static let shared = STM()
     
-    func exec(state:States){
+    public func exec(state:States){
         DispatchQueue.main.async {
             print("STM handles: \(state)")
             switch(state){
