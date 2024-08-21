@@ -47,8 +47,8 @@ public class Calls{
         var req = Components.Schemas.NewSessionRequest()
         req.sessionDescription?.sdp = sdp
         req.sessionDescription?._type = .offer
-
-        let response = try? await client.newSession(.init(path: path, body: .json(.init(value1: req, value2: "1234"))))
+        let c = try? OpenAPIValueContainer()
+        let response = try? await client.newSession(.init(path: path, body: .json(.init(value1: req, value2:c!))))
         switch response {
         case .created(let created):
             switch created.body {
