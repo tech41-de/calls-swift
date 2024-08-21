@@ -48,13 +48,7 @@ public class Calls{
         )
        
         let path = Operations.newSession.Input.Path(appId: appId)
-        let desc = Components.Schemas.SessionDescription(sdp:sdp, _type:.offer)
-        let req = Components.Schemas.NewSessionRequest(sessionDescription: desc)
- 
-        let body = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: OpenAPIValueContainer.init(stringLiteral: "{\"sessionId\":\"none\"}"))
-        let input = Operations.newSession.Input(path:path, body:.json(body))
-        let response = try? await client.newSession(input)
-        switch response {
+        switch try? await client.newSession(Operations.newSession.Input(path: path)){
         case .created(let created):
             switch created.body {
             case .json(let created):
