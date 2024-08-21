@@ -10,7 +10,7 @@ import SwiftUI
 public class STM{
     private init(){}
     
-    static let shared = STM()
+    public static let shared = STM()
     
     func exec(state:States){
         DispatchQueue.main.async {
