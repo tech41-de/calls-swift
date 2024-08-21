@@ -35,11 +35,7 @@ public class Calls{
         var sessionDescription = SessionDescription()
     }
     
-    struct BodyNew{
-        var value1: Components.Schemas.NewSessionRequest
-        var value2: OpenAPIRuntime.OpenAPIValueContainer
-    }
-    
+
     public func newSession(sdp:String) async{
         let client = Client(
             serverURL: URL(string: serverUrl)!,
@@ -51,10 +47,8 @@ public class Calls{
         var req = Components.Schemas.NewSessionRequest()
         req.sessionDescription?.sdp = sdp
         req.sessionDescription?._type = .offer
-        
-        let c = OpenAPIRuntime.OpenAPIValueContainer.init(stringLiteral: "")
-        let d = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: c)
-        let response = try? await client.newSession(.init(path: path, body:.json(d)))
+
+        let response = try? await client.newSession(.init(path: path, body: .json(.init(value1: req, value2: "1234"))))
         switch response {
         case .created(let created):
             switch created.body {
