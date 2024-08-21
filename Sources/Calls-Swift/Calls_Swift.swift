@@ -51,10 +51,8 @@ public class Calls{
         var req = Components.Schemas.NewSessionRequest()
         req.sessionDescription?.sdp = sdp
         req.sessionDescription?._type = .offer
-        let p = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: "")
-        let d = Operations.newSession.Input.Body.json(p)
-        let input = Operations.newSession.Input.init(path: path, body:d)
-        let response = try? await client.newSession(input)
+        let d = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: "[String: Any?]")
+        let response = try? await client.newSession(.init(path: path, body:.json(d)))
         switch response {
         case .created(let created):
             switch created.body {
