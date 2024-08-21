@@ -56,8 +56,9 @@ public class Calls{
         
         var msg = SessionDescriptionOffer()
         msg.sessionDescription.sdp = sdp
-        msg.sessionDescription.type = "ofder"
-        request.httpBody = try? JSONSerialization.data(withJSONObject: msg)
+        msg.sessionDescription.type = "offer"
+        let data = convertJSONToData(item: msg)
+        request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
             if let error = error {
