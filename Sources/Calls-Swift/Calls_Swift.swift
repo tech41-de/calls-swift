@@ -14,13 +14,17 @@ public class Calls{
     var appId = ""
     var secret = ""
     
-    func configure(serverUrl:String, appId :String, secret:String){
+    public init(){
+        
+    }
+    
+    public func configure(serverUrl:String, appId :String, secret:String){
         self.serverUrl = serverUrl
         self.appId = appId
         self.secret = secret
     }
    
-    func test() async{
+    public func newSession() async{
         let client = Client(
             serverURL: URL(string: serverUrl)!,
             transport: transport,
