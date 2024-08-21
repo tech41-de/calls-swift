@@ -7,6 +7,8 @@ import OpenAPIURLSession
 import OpenAPIRuntime
 
 public class Calls{
+    let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
     
     let transport: ClientTransport = URLSessionTransport()
     
@@ -24,7 +26,21 @@ public class Calls{
         self.secret = secret
     }
    
-    public func newSession() async{
+    public struct SessionDescription : Codable{
+        var type = "offer"
+        var sdp = ""
+    }
+    
+    public struct SessionDescriptionOffer : Codable{
+        var sessionDescription = SessionDescription()
+    }
+    
+    struct BodyNew{
+        var value1: Components.Schemas.NewSessionRequest
+        var value2: OpenAPIRuntime.OpenAPIValueContainer
+    }
+    
+    public func newSession(sdp:String) async{
         let client = Client(
             serverURL: URL(string: serverUrl)!,
             transport: transport,
@@ -32,11 +48,15 @@ public class Calls{
         )
 
         let path = Operations.newSession.Input.Path(appId: appId)
-        let input = Operations.newSession.Input(path: path)
+        var req = Components.Schemas.NewSessionRequest()
+        req.sessionDescription?.sdp = sdp
+        req.sessionDescription?._type = .offer
+        let p = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: "offer")
+        let d = Operations.newSession.Input.Body.json(p)
+        let input = Operations.newSession.Input.init(path: path, body:d)
         let response = try? await client.newSession(input)
         switch response {
         case .created(let created):
-
             switch created.body {
             case .json(let created):
                 print(created.value1)
@@ -46,6 +66,15 @@ public class Calls{
             print("🥺 undocumented response: \(statusCode)")
         case .none:
             print("🥺 undocumented response: ")
+        }
+    }
+    
+    func convertJSONToData<T: Encodable>(item: T) -> Data? {
+        do {
+            let encodedJSON = try JSONEncoder().encode(item)
+            return encodedJSON
+        } catch {
+            return nil
         }
     }
 }
