@@ -47,7 +47,8 @@ public class Calls{
         var req = Components.Schemas.NewSessionRequest()
         req.sessionDescription?.sdp = sdp
         req.sessionDescription?._type = .offer
-        let c = try? OpenAPIValueContainer()
+        var c = try? OpenAPIValueContainer()
+        c?.value = "not set"
         let response = try? await client.newSession(.init(path: path, body: .json(.init(value1: req, value2:c!))))
         switch response {
         case .created(let created):

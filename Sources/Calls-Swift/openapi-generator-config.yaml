@@ -1,6 +1,4 @@
 generate:
   - types
   - client
-featureFlags:
-  - nullableSchemas
 accessModifier: public
