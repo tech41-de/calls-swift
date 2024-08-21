@@ -49,7 +49,12 @@ public class Calls{
         req.sessionDescription?._type = .offer
         var c = try? OpenAPIValueContainer()
         c?.value = "not set"
-        let response = try? await client.newSession(.init(path: path, body: .json(.init(value1: req, value2:c!))))
+        var data = try? encoder.encode(req)
+        let body = HTTPBody(data!) as? Operations.newSession.Input.Body
+        let response = try? await client.newSession(
+            path:path,
+            body: body
+        )
         switch response {
         case .created(let created):
             switch created.body {
