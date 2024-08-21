@@ -3,8 +3,6 @@
 
 import SwiftUI
 import LiveKitWebRTC
-import OpenAPIURLSession
-import OpenAPIRuntime
 
 struct NewReq :Encodable, Decodable{
     var sdp = ""
@@ -18,8 +16,6 @@ struct NewDesc : Encodable, Decodable{
 public class Calls{
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
-    
-    let transport: ClientTransport = URLSessionTransport()
     
     var serverUrl = "https://rtc.live.cloudflare.com/v1"
     var appId = ""
@@ -50,6 +46,7 @@ public class Calls{
     }
     
     public func newSession(sdp:String, completion:  @escaping (_ sessionId:String, _ sdp:String, _ error:String)->()) async{
+        let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/new")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -57,18 +54,12 @@ public class Calls{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        let session = URLSession.shared
-        
-        let desc =  Components.Schemas.SessionDescription(sdp:sdp, _type:.offer)
-        let msg = Components.Schemas.NewSessionRequest(sessionDescription: desc)
+        var msg = SessionDescriptionOffer()
+        msg.sessionDescription.sdp = sdp
+        msg.sessionDescription.type = "ofder"
         request.httpBody = try? JSONSerialization.data(withJSONObject: msg)
         
-        // convert parameters to Data and assign dictionary to httpBody of reques
-        let data = convertJSONToData(item: desc)
-        request.httpBody = data
-
         let task =  session.dataTask(with: request) { data, response, error in
-            
             if let error = error {
                 return completion("","",error.localizedDescription)
             }
