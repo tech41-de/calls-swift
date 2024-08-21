@@ -42,19 +42,13 @@ public class Calls{
             transport: transport,
             middlewares: [AuthenticationMiddleware(authorizationHeaderFieldValue: "BEARER " + secret)]
         )
-
+       
         let path = Operations.newSession.Input.Path(appId: appId)
-        var req = Components.Schemas.NewSessionRequest()
-        req.sessionDescription?.sdp = sdp
-        req.sessionDescription?._type = .offer
-        var c = try? OpenAPIValueContainer()
-        c?.value = "not set"
-        let data = try? encoder.encode(req)
-        let body = HTTPBody(data!) as? Operations.newSession.Input.Body
-        let response = try? await client.newSession(
-            path:path,
-            body: body
-        )
+        let desc = Components.Schemas.SessionDescription(sdp:sdp, _type:.offer)
+        let req = Components.Schemas.NewSessionRequest(sessionDescription: desc)
+        let body = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: nil)
+        let input = Operations.newSession.Input(path:path, body:.json(body))
+        let response = try? await client.newSession(input)
         switch response {
         case .created(let created):
             switch created.body {
