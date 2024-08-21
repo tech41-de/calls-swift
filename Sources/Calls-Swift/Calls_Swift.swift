@@ -51,7 +51,7 @@ public class Calls{
         var req = Components.Schemas.NewSessionRequest()
         req.sessionDescription?.sdp = sdp
         req.sessionDescription?._type = .offer
-        let p = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: "offer")
+        let p = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: "")
         let d = Operations.newSession.Input.Body.json(p)
         let input = Operations.newSession.Input.init(path: path, body:d)
         let response = try? await client.newSession(input)
