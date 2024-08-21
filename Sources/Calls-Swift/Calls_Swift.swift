@@ -44,7 +44,7 @@ public class Calls{
         let client = Client(
             serverURL: URL(string: serverUrl)!,
             transport: transport,
-            middlewares: [AuthenticationMiddleware(authorizationHeaderFieldValue: "BEARER " + secret)]
+            middlewares: [AuthenticationMiddleware(authorizationHeaderFieldValue: secret)]
         )
        
         let path = Operations.newSession.Input.Path(appId: appId)
