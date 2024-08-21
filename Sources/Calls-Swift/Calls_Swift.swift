@@ -36,7 +36,7 @@ public class Calls{
     }
     
 
-    public func newSession(sdp:String) async{
+    public func newSession(sdp:String, completion: (_ sessionId:String, _ sdp:String, _ error:String)->()) async{
         let client = Client(
             serverURL: URL(string: serverUrl)!,
             transport: transport,
@@ -49,7 +49,7 @@ public class Calls{
         req.sessionDescription?._type = .offer
         var c = try? OpenAPIValueContainer()
         c?.value = "not set"
-        var data = try? encoder.encode(req)
+        let data = try? encoder.encode(req)
         let body = HTTPBody(data!) as? Operations.newSession.Input.Body
         let response = try? await client.newSession(
             path:path,
@@ -61,11 +61,14 @@ public class Calls{
             case .json(let created):
                 print(created.value1)
                 print(created.value2)
+                completion("some", "spd", "")
             }
         case .undocumented(statusCode: let statusCode, _):
             print("🥺 undocumented response: \(statusCode)")
+            completion("", "", "statusCode \(statusCode)")
         case .none:
             print("🥺 undocumented response: ")
+            completion("", "", "unknown")
         }
     }
     
