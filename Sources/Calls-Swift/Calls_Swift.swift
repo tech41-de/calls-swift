@@ -52,7 +52,7 @@ public class Calls{
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+        request.setValue("BEARER \(secret)", forHTTPHeaderField: "Authorization")
         
         var msg = SessionDescriptionOffer()
         msg.sessionDescription.sdp = sdp
