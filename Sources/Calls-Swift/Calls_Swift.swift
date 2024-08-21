@@ -47,7 +47,7 @@ public class Calls{
         let desc = Components.Schemas.SessionDescription(sdp:sdp, _type:.offer)
         let req = Components.Schemas.NewSessionRequest(sessionDescription: desc)
         var c = try? OpenAPIValueContainer()
-        c?.value = true
+        c?.value = "sessionId"
         
         let body = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: c!)
         let input = Operations.newSession.Input(path:path, body:.json(body))
