@@ -36,6 +36,10 @@ public class Calls{
     }
     
 
+    struct sid{
+        var sessionId : String
+    }
+    
     public func newSession(sdp:String, completion: (_ sessionId:String, _ sdp:String, _ error:String)->()) async{
         let client = Client(
             serverURL: URL(string: serverUrl)!,
@@ -46,10 +50,8 @@ public class Calls{
         let path = Operations.newSession.Input.Path(appId: appId)
         let desc = Components.Schemas.SessionDescription(sdp:sdp, _type:.offer)
         let req = Components.Schemas.NewSessionRequest(sessionDescription: desc)
-        var c = try? OpenAPIValueContainer()
-        c?.value = "sessionId"
-        
-        let body = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: c!)
+ 
+        let body = Operations.newSession.Input.Body.jsonPayload(value1: req, value2: OpenAPIValueContainer.init(stringLiteral: "{'sessionId':'none'}"))
         let input = Operations.newSession.Input(path:path, body:.json(body))
         let response = try? await client.newSession(input)
         switch response {
