@@ -6,6 +6,15 @@ import LiveKitWebRTC
 import OpenAPIURLSession
 import OpenAPIRuntime
 
+struct NewReq :Encodable, Decodable{
+    var sdp = ""
+    var type = ""
+}
+
+struct NewDesc : Encodable, Decodable{
+    var sessionDescription = NewReq()
+}
+
 public class Calls{
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
@@ -40,30 +49,52 @@ public class Calls{
         var sessionId : String
     }
     
-    public func newSession(sdp:String, completion: (_ sessionId:String, _ sdp:String, _ error:String)->()) async{
-        let client = Client(
-            serverURL: URL(string: serverUrl)!,
-            transport: transport,
-            middlewares: [AuthenticationMiddleware(authorizationHeaderFieldValue: secret)]
-        )
-       
-        let path = Operations.newSession.Input.Path(appId: appId)
-        switch try? await client.newSession(Operations.newSession.Input(path: path)){
-        case .created(let created):
-            switch created.body {
-            case .json(let created):
-                print(created.value1)
-                print(created.value2)
-                completion("some", "spd", "")
+    public func newSession(sdp:String, completion:  @escaping (_ sessionId:String, _ sdp:String, _ error:String)->()) async{
+        let url = URL(string: serverUrl + appId + "/sessions/new")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+        
+        let session = URLSession.shared
+        
+        let desc =  Components.Schemas.SessionDescription(sdp:sdp, _type:.offer)
+        let msg = Components.Schemas.NewSessionRequest(sessionDescription: desc)
+        request.httpBody = try? JSONSerialization.data(withJSONObject: msg)
+        
+        // convert parameters to Data and assign dictionary to httpBody of reques
+        let data = convertJSONToData(item: desc)
+        request.httpBody = data
+
+        let task =  session.dataTask(with: request) { data, response, error in
+            
+            if let error = error {
+                return completion("","",error.localizedDescription)
             }
-        case .undocumented(statusCode: let statusCode, _):
-            print("🥺 undocumented response: \(statusCode)")
-            completion("", "", "statusCode \(statusCode)")
-        case .none:
-            print("🥺 undocumented response: ")
-            completion("", "", "unknown")
+            
+            // ensure there is data returned
+            guard let responseData = data else {
+                return completion("","","Invalid Response received from the server")
+            }
+            
+            do {
+                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
+                    let desc = try self.decoder.decode(NewDesc.self, from: responseData)
+                    let sessionIdStr =  jsonResponse["sessionId"]
+                    return completion(sessionIdStr as! String, desc.sessionDescription.sdp,"")
+                } else {
+                    return completion("","", "data maybe corrupted or in wrong format")
+                }
+            } catch let error {
+                return completion("","", error.localizedDescription)
+            }
         }
+        
+        // perform the task
+        task.resume()
     }
+
     
     func convertJSONToData<T: Encodable>(item: T) -> Data? {
         do {
