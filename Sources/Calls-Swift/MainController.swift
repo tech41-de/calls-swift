@@ -129,10 +129,10 @@ class MainController {
     
     func bindViews(){
         let remoteRenderer = LKRTCMTLNSVideoView(frame: CGRect(x:0,y:0, width:150, height:150))
-        Model.shared.youView.addSubview(remoteRenderer)
+       // Model.shared.youView.addSubview(remoteRenderer)
         
         let localRenderer = LKRTCMTLNSVideoView(frame: CGRect(x:0,y:0, width:150, height:150))
-        Model.shared.myView.addSubview(localRenderer)
+       // Model.shared.myView.addSubview(localRenderer)
         
        self.webRTCClient.startCaptureLocalVideo(renderer: localRenderer)
        self.webRTCClient.renderRemoteVideo(to: remoteRenderer)

@@ -99,8 +99,8 @@ public class Model : ObservableObject{
     @Published var hasSDPLocal = "❌"
     @Published var hasSDPRemote = "❌"
     @Published var isConnected = false
-    @Published var youView = LKRTCMTLNSVideoView()
-    @Published var myView = LKRTCMTLNSVideoView()
+   // @Published var youView = LKRTCMTLNSVideoView()
+   // @Published var myView = LKRTCMTLNSVideoView()
 
     @Published var jwtToken = ""
     @Published var isLoggedOn = false
