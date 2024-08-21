@@ -8,7 +8,7 @@
 import SwiftUI
 import LiveKitWebRTC
 
-enum ConfigKeys : String{
+public enum ConfigKeys : String{
     case api
     case stunIp
     case stunPort
@@ -18,14 +18,14 @@ enum ConfigKeys : String{
     case signal
 }
 
-enum Environments{
+public enum Environments{
     case Local
     case Dev
     case Test
     case Prod
 }
 
-enum States{
+public enum States{
     case Config  // gets the static config file based on Environment Local, Dev, Test, Prod from Github
 
     case Keys // if no keys asks user if he has Solana keys or creates Nickname and Public and Private Keypair
@@ -64,20 +64,21 @@ enum States{
 
     case Stream  // starts receiving Stream
 }
-struct StunDetails{
+
+public struct StunDetails{
     var type :String = ""
     var familiy: String = ""
     var address : String = ""
     var port : Int = 0
 }
 
-struct ADevice{
+public struct ADevice{
     var id = ""
     var name = ""
     var uid :UInt32 = 0
 }
 
-class Model : ObservableObject{
+public class Model : ObservableObject{
     
     static let shared = Model()
     
