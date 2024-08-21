@@ -80,7 +80,7 @@ public struct ADevice{
 
 public class Model : ObservableObject{
     
-    static let shared = Model()
+    public static let shared = Model()
     
     @Published var stunText : String = "❌"
     @Published var natText : String = "❌"
@@ -131,7 +131,7 @@ public class Model : ObservableObject{
 
     var webRTCClient : WebRTCClient?
     
-    func getAudioInDevice(name:String)->ADevice?{
+    public func getAudioInDevice(name:String)->ADevice?{
         for d in audioInDevices{
             if d.name == name{
                 return d
@@ -140,7 +140,7 @@ public class Model : ObservableObject{
         return nil
     }
     
-    func getAudioOutDevice(name:String)->ADevice?{
+    public func getAudioOutDevice(name:String)->ADevice?{
         for d in audioOutDevices{
             if d.name == name{
                 return d
