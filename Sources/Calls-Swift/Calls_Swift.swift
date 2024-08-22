@@ -43,6 +43,63 @@ public class Calls{
         var sessionId : String
     }
     
+    public struct NewTrack : Codable{
+        var sessionDescription = SessionDescription()
+        var tracks = [Track]()
+    }
+    
+    public struct NewTracksResponse : Codable{
+        var requiresImmediateRenegotiation = false
+        var sessionDescription = SessionDescription()
+        var tracks = [Track]()
+    }
+
+    public struct Track : Codable{
+        var location  = "local"
+        var sessionId = ""
+        var trackName = ""
+        var mid = ""
+    }
+    
+    public func Track(sessionId:String, newTrack: NewTrack, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
+        let session = URLSession.shared
+        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/tracks/new")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+        
+        let data = convertJSONToData(item: newTrack)
+        request.httpBody = data
+        
+        let task =  session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                return completion(nil, error.localizedDescription)
+            }
+            
+            // ensure there is data returned
+            guard let responseData = data else {
+                return completion(nil,"Invalid Response received from the server")
+            }
+            
+            do {
+                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
+                   
+                    let newTracksResponse = try self.decoder.decode(NewTracksResponse.self, from: responseData)
+                    return completion(newTracksResponse, "")
+                } else {
+                    return completion(nil, "data maybe corrupted or in wrong format")
+                }
+            } catch let error {
+                return completion(nil,  error.localizedDescription)
+            }
+        }
+        
+        // perform the task
+        task.resume()
+    }
+    
     public func newSession(sdp:String, completion:  @escaping (_ sessionId:String, _ sdp:String, _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/new")!
