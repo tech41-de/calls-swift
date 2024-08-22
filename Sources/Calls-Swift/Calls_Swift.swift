@@ -2,7 +2,6 @@
 // https://docs.swift.org/swift-book
 
 import SwiftUI
-import LiveKitWebRTC
 
 struct NewReq :Encodable, Decodable{
     var sdp = ""
@@ -40,7 +39,6 @@ public class Calls{
         var sessionDescription = SessionDescription()
     }
     
-
     struct sid{
         var sessionId : String
     }
@@ -54,10 +52,9 @@ public class Calls{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        var msg = SessionDescriptionOffer()
-        msg.sessionDescription.sdp = sdp
-        msg.sessionDescription.type = "offer"
-        let data = convertJSONToData(item: msg)
+        let newReq = NewReq(sdp:sdp, type:"offer")
+        let desc = NewDesc(sessionDescription:newReq)
+        let data = convertJSONToData(item: desc)
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
