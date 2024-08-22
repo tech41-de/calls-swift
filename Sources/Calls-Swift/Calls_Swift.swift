@@ -12,6 +12,34 @@ struct NewDesc : Encodable, Decodable{
     var sessionDescription = NewReq()
 }
 
+public struct SessionDescription : Codable{
+    var type = "offer"
+    var sdp = ""
+}
+
+public struct SessionDescriptionOffer : Codable{
+    var sessionDescription = SessionDescription()
+}
+
+
+public struct NewTrack : Codable{
+    var sessionDescription = SessionDescription()
+    var tracks = [Track]()
+}
+
+public struct NewTracksResponse : Codable{
+    var requiresImmediateRenegotiation = false
+    var sessionDescription = SessionDescription()
+    var tracks = [Track]()
+}
+
+public struct Track : Codable{
+    var location  = "local"
+    var sessionId = ""
+    var trackName = ""
+    var mid = ""
+}
+
 public class Calls{
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
@@ -30,36 +58,11 @@ public class Calls{
         self.secret = secret
     }
    
-    public struct SessionDescription : Codable{
-        var type = "offer"
-        var sdp = ""
-    }
-    
-    public struct SessionDescriptionOffer : Codable{
-        var sessionDescription = SessionDescription()
-    }
-    
     struct sid{
         var sessionId : String
     }
     
-    public struct NewTrack : Codable{
-        var sessionDescription = SessionDescription()
-        var tracks = [Track]()
-    }
-    
-    public struct NewTracksResponse : Codable{
-        var requiresImmediateRenegotiation = false
-        var sessionDescription = SessionDescription()
-        var tracks = [Track]()
-    }
 
-    public struct Track : Codable{
-        var location  = "local"
-        var sessionId = ""
-        var trackName = ""
-        var mid = ""
-    }
     
     public func Track(sessionId:String, newTrack: NewTrack, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
         let session = URLSession.shared
