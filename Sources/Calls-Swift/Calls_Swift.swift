@@ -4,40 +4,40 @@
 import SwiftUI
 
 struct NewReq :Encodable, Decodable{
-    var sdp = ""
-    var type = ""
+    public var sdp : String
+    public var type : String
 }
 
 struct NewDesc : Encodable, Decodable{
-    var sessionDescription = NewReq()
+    public var sessionDescription : NewReq
 }
 
 public struct SessionDescription : Codable{
-    var type = "offer"
-    var sdp = ""
+    public var type :String
+    public var sdp :String
 }
 
 public struct SessionDescriptionOffer : Codable{
-    var sessionDescription = SessionDescription()
+    public var sessionDescription : SessionDescription
 }
 
 
 public struct NewTrack : Codable{
-    var sessionDescription = SessionDescription()
-    var tracks = [Track]()
+    public var sessionDescription : SessionDescription
+    public var tracks : [Track]
 }
 
 public struct NewTracksResponse : Codable{
-    var requiresImmediateRenegotiation = false
-    var sessionDescription = SessionDescription()
-    var tracks = [Track]()
+    public var requiresImmediateRenegotiation = false
+    public var sessionDescription : SessionDescription
+    public var tracks : [Track]
 }
 
 public struct Track : Codable{
-    var location  = "local"
-    var sessionId = ""
-    var trackName = ""
-    var mid = ""
+    public var location :String
+    public var sessionId : String
+    public var trackName : String
+    public var mid : String
 }
 
 public class Calls{
