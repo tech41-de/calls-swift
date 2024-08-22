@@ -18,7 +18,6 @@ let package = Package(
     ],
     dependencies: [
             // LK-Prefixed Dynamic WebRTC XCFramework
-            .package(url: "https://github.com/livekit/webrtc-xcframework.git", exact: "125.6422.06"),
             .package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.0.0"),
             .package(url: "https://github.com/apple/swift-openapi-generator", from: "1.0.0"),
             .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.0.0"),
@@ -29,7 +28,6 @@ let package = Package(
         .target(
             name: "Calls-Swift",
             dependencies: [
-               .product(name: "LiveKitWebRTC", package: "webrtc-xcframework"),
                .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
                .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession"),
             ],
