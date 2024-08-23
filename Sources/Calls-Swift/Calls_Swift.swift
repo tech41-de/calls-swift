@@ -92,16 +92,11 @@ public class Calls{
             self.trackName = trackName
             self.mid = mid
         }
-        
-        public init(trackName :String, mid:String){
-            self.trackName = trackName
-            self.mid = mid
-        }
     }
 
     public struct NewTracksResponse : Codable{
-        var requiresImmediateRenegotiation : Bool
-        var tracks : [NewTracksRes]
+        public var requiresImmediateRenegotiation : Bool
+        public var tracks : [NewTracksRes]
         
         public init(requiresImmediateRenegotiation:Bool, tracks:[NewTracksRes] ){
             self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
@@ -114,7 +109,6 @@ public class Calls{
         public var mid : String
         public var trackName : String
        
-        
         public init(location:String, mid : String, trackName :String){
             self.location = location
             self.mid = mid
