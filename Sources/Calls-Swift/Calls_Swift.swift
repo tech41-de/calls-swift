@@ -97,10 +97,12 @@ public class Calls{
     public struct NewTracksResponse : Codable{
         public var requiresImmediateRenegotiation : Bool
         public var tracks : [NewTracksRes]
+        public var sessionDescription : SessionDescription
         
-        public init(requiresImmediateRenegotiation:Bool, tracks:[NewTracksRes] ){
+        public init(requiresImmediateRenegotiation:Bool, tracks:[NewTracksRes], sessionDescription : SessionDescription ){
             self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
             self.tracks = tracks
+            self.sessionDescription = sessionDescription
         }
     }
 
