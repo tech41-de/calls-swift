@@ -120,12 +120,12 @@ public class Calls{
     
     public struct RemoteTrack : Codable{
         public var location :String
-        public var sessionId : String
+        public var mid : String
         public var trackName : String
         
-        public init(location:String, sessionId : String, trackName :String){
+        public init(location:String, mid : String, trackName :String){
             self.location = location
-            self.sessionId = sessionId
+            self.mid = mid
             self.trackName = trackName
         }
     }
