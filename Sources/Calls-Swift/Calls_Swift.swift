@@ -25,9 +25,9 @@ public class Calls{
     }
 
     public struct SessionDescription : Codable{
-        public var type :String
         public var sdp :String
-        
+        public var type :String
+       
         public init(sdp :String, type:String){
             self.sdp = sdp
             self.type = type
@@ -81,14 +81,31 @@ public class Calls{
             self.tracks = tracks
         }
     }
+    
+    public struct NewTracksRes : Codable{
+        public var sessionId : String?
+        public var trackName : String
+        public var mid : String
+        
+        public init(sessionId : String, trackName :String, mid:String){
+            self.sessionId = sessionId
+            self.trackName = trackName
+            self.mid = mid
+        }
+        
+        public init(trackName :String, mid:String){
+            self.trackName = trackName
+            self.mid = mid
+        }
+    }
 
     public struct NewTracksResponse : Codable{
-        public var local_tracks:LocalTracksRes
-        public var remote_tracks:RemoteTracksRes
-
-        public init(local_tracks:LocalTracksRes, remote_tracks:RemoteTracksRes ){
-            self.local_tracks = local_tracks
-            self.remote_tracks = remote_tracks
+        var requiresImmediateRenegotiation : Bool
+        var tracks : [NewTracksRes]
+        
+        public init(requiresImmediateRenegotiation:Bool, tracks:[NewTracksRes] ){
+            self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
+            self.tracks = tracks
         }
     }
 
