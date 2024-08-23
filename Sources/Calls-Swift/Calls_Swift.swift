@@ -109,6 +109,9 @@ public class Calls{
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
         let data = convertJSONToData(item: newTrack)
+        let str = String(decoding: data!, as: UTF8.self)
+        print(str)
+        
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
