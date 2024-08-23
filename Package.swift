@@ -5,8 +5,7 @@ let package = Package(
     name: "Calls",
     platforms: [
             .iOS(.v13),
-            .macOS(.v10_15),
-            .macCatalyst(.v13),
+            .macOS(.v10_15)
         ],
     products: [
         .library(
