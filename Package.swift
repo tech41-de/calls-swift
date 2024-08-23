@@ -19,9 +19,9 @@ let package = Package(
     ],
     dependencies: [
             // LK-Prefixed Dynamic WebRTC XCFramework
-            .package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.0.0"),
-            .package(url: "https://github.com/apple/swift-openapi-generator", from: "1.0.0"),
-            .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.0.0"),
+           //.package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.0.0"),
+           // .package(url: "https://github.com/apple/swift-openapi-generator", from: "1.0.0"),
+           // .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.0.0"),
         ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -29,11 +29,11 @@ let package = Package(
         .target(
             name: "Calls-Swift",
             dependencies: [
-               .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
-               .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession"),
+              // .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
+              // .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession"),
             ],
             plugins: [
-                .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator"),
+               // .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator"),
             ]
         ),
         .testTarget(
