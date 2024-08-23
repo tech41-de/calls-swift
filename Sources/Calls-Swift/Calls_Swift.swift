@@ -152,7 +152,7 @@ public class Calls{
     }
     
 
-    public func renegotiate(sessionId:String, sdp: SessionDescription, completion:  @escaping (_ sdp: SessionDescription?, _ error:String)->()) async{
+    public func renegotiate(sessionId:String, sdp: NewDesc, completion:  @escaping (_ sdp: SessionDescription?, _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/renegotiate")!
         var request = URLRequest(url: url)
