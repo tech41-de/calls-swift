@@ -120,15 +120,9 @@ public class Calls{
             guard let responseData = data else {
                 return completion(nil,"Invalid Response received from the server")
             }
-            
             do {
-                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
-                   
-                    let newTracksResponse = try self.decoder.decode(NewTracksResponse.self, from: responseData)
-                    return completion(newTracksResponse, "")
-                } else {
-                    return completion(nil, "data maybe corrupted or in wrong format")
-                }
+                let newTracksResponse = try self.decoder.decode(NewTracksResponse.self, from: responseData)
+                return completion(newTracksResponse, "")
             } catch let error {
                 return completion(nil,  error.localizedDescription)
             }
