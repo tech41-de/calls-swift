@@ -172,6 +172,9 @@ public class Calls{
                 return completion(nil,"Invalid Response received from the server")
             }
             do {
+                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
+                    print(jsonResponse)
+                }
                 let newTracksResponse = try self.decoder.decode(NewTracksResponse.self, from: responseData)
                 return completion(newTracksResponse, "")
             } catch let error {
