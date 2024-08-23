@@ -19,9 +19,7 @@ let package = Package(
         ],
     targets: [
         .target(
-            name: "Calls-Swift",
-            dependencies: [
-            ]
+            name: "Calls-Swift"
         )
     ],
     swiftLanguageVersions: [
