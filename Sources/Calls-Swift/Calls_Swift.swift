@@ -42,13 +42,11 @@ public class Calls{
         }
     }
 
-    public struct NewTracksRequest : Codable{
-        public var local_tracks:LocalTracks
-        public var remote_tracks:RemoteTracks
-
-        public init(local_tracks:LocalTracks, remote_tracks:RemoteTracks ){
-            self.local_tracks = local_tracks
-            self.remote_tracks = remote_tracks
+    public struct NewTracksRemote : Codable{
+        public var tracks:RemoteTracks
+        
+        public init(tracks:RemoteTracks ){
+            self.tracks = tracks
         }
     }
     
@@ -147,7 +145,7 @@ public class Calls{
         var sessionId : String
     }
     
-    public func newTracks(sessionId:String, newTrack: NewTracksRequest, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
+    public func newTracks(sessionId:String, newTracksRemote: NewTracksRemote, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/tracks/new")!
         var request = URLRequest(url: url)
@@ -156,7 +154,7 @@ public class Calls{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        let data = convertJSONToData(item: newTrack)
+        let data = convertJSONToData(item: newTracksRemote)
         let str = String(decoding: data!, as: UTF8.self)
         print(str)
         
