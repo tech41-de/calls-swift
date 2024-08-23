@@ -151,6 +151,46 @@ public class Calls{
         var sessionId : String
     }
     
+
+    public func renegotiate(sessionId:String, sdp: SessionDescription, completion:  @escaping (_ sdp: SessionDescription?, _ error:String)->()) async{
+        let session = URLSession.shared
+        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/renegotiate")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+        
+        let data = convertJSONToData(item: sdp)
+        let str = String(decoding: data!, as: UTF8.self)
+        print(str)
+        
+        request.httpBody = data
+        
+        let task =  session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                return completion(nil, error.localizedDescription)
+            }
+            
+            // ensure there is data returned
+            guard let responseData = data else {
+                return completion(nil,"Invalid Response received from the server")
+            }
+            do {
+                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
+                    print(jsonResponse)
+                }
+                let sdp = try self.decoder.decode(SessionDescription.self, from: responseData)
+                return completion( sdp, "")
+            } catch let error {
+                return completion(nil,  error.localizedDescription)
+            }
+        }
+        
+        // perform the task
+        task.resume()
+    }
+    
     public func newLocalTracks(sessionId:String, newTracks: NewTracksLocal, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/tracks/new")!
