@@ -42,29 +42,80 @@ public class Calls{
         }
     }
 
-    public struct NewTrack : Codable{
+    public struct NewTracksRequest : Codable{
+        public var local_tracks:LocalTracks
+        public var remote_tracks:RemoteTracks
+
+        public init(local_tracks:LocalTracks, remote_tracks:RemoteTracks ){
+            self.local_tracks = local_tracks
+            self.remote_tracks = remote_tracks
+        }
+    }
+    
+    public struct LocalTracks : Codable{
         public var sessionDescription : SessionDescription
-        public var tracks : [Track]
+        public var tracks : [LocalTrack]
         
-        public init(sessionDescription:SessionDescription, tracks : [Track]){
+        public init(sessionDescription:SessionDescription, tracks : [LocalTrack]){
             self.sessionDescription = sessionDescription
             self.tracks = tracks
         }
     }
-
-    public struct NewTracksResponse : Codable{
-        public var requiresImmediateRenegotiation = false
+    
+    public struct LocalTracksRes : Codable{
+        public var requiresImmediateRenegotiation : Bool
         public var sessionDescription : SessionDescription
-        public var tracks : [Track]
+        public var tracks : [LocalTrack]
         
-        public init(requiresImmediateRenegotiation:Bool, sessionDescription : SessionDescription, tracks : [Track]){
+        public init(requiresImmediateRenegotiation:Bool, sessionDescription:SessionDescription, tracks : [LocalTrack]){
             self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
             self.sessionDescription = sessionDescription
             self.tracks = tracks
         }
     }
+    
+    public struct RemoteTracks : Codable{
+        public var tracks : [RemoteTrack]
+        public init(tracks : [RemoteTrack]){
+            self.tracks = tracks
+        }
+    }
+    
+    public struct RemoteTracksRes : Codable{
+        public var requiresImmediateRenegotiation: Bool
+        public var tracks : [RemoteTrack]
+        
+        public init(requiresImmediateRenegotiation:Bool, tracks : [RemoteTrack]){
+            self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
+            self.tracks = tracks
+        }
+    }
 
-    public struct Track : Codable{
+    public struct NewTracksResponse : Codable{
+        public var local_tracks:LocalTracksRes
+        public var remote_tracks:RemoteTracksRes
+
+        public init(local_tracks:LocalTracksRes, remote_tracks:RemoteTracksRes ){
+            self.local_tracks = local_tracks
+            self.remote_tracks = remote_tracks
+        }
+    }
+
+    public struct LocalTrack : Codable{
+        public var location :String
+        public var sessionId : String
+        public var trackName : String
+        public var mid : String
+        
+        public init(location:String, sessionId : String, trackName :String, mid:String){
+            self.location = location
+            self.sessionId = sessionId
+            self.trackName = trackName
+            self.mid = mid
+        }
+    }
+    
+    public struct RemoteTrack : Codable{
         public var location :String
         public var sessionId : String
         public var trackName : String
@@ -88,7 +139,7 @@ public class Calls{
     public init(){
         
     }
-    
+
     public func configure(serverUrl:String, appId :String, secret:String){
         self.serverUrl = serverUrl
         self.appId = appId
@@ -99,7 +150,7 @@ public class Calls{
         var sessionId : String
     }
     
-    public func newTracks(sessionId:String, newTrack: NewTrack, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
+    public func newTracks(sessionId:String, newTrack: NewTracksRequest, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/tracks/new")!
         var request = URLRequest(url: url)
