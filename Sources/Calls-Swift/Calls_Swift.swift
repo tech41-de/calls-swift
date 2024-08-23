@@ -138,7 +138,7 @@ public class Calls{
         var sessionId : String
     }
     
-    public func newLocalTracks(sessionId:String, newTracksRemote: NewTracksLocal, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
+    public func newLocalTracks(sessionId:String, newTracks: NewTracksLocal, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/tracks/new")!
         var request = URLRequest(url: url)
@@ -147,7 +147,7 @@ public class Calls{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        let data = convertJSONToData(item: newTracksRemote)
+        let data = convertJSONToData(item: newTracks)
         let str = String(decoding: data!, as: UTF8.self)
         print(str)
         
