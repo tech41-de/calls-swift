@@ -50,11 +50,11 @@ public class Calls{
         }
     }
     
-    public struct LocalTracks : Codable{
+    public struct NewTracksLocal : Codable{
         public var sessionDescription : SessionDescription
-        public var tracks : [LocalTrack]
+        public var tracks:[LocalTrack]
         
-        public init(sessionDescription:SessionDescription, tracks : [LocalTrack]){
+        public init(sessionDescription: SessionDescription, tracks:[LocalTrack] ){
             self.sessionDescription = sessionDescription
             self.tracks = tracks
         }
@@ -68,13 +68,6 @@ public class Calls{
         public init(requiresImmediateRenegotiation:Bool, sessionDescription:SessionDescription, tracks : [LocalTrack]){
             self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
             self.sessionDescription = sessionDescription
-            self.tracks = tracks
-        }
-    }
-    
-    public struct RemoteTracks : Codable{
-        public var tracks : [RemoteTrack]
-        public init(tracks : [RemoteTrack]){
             self.tracks = tracks
         }
     }
@@ -143,6 +136,45 @@ public class Calls{
    
     struct sid{
         var sessionId : String
+    }
+    
+    public func newLocalTracks(sessionId:String, newTracksRemote: NewTracksLocal, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
+        let session = URLSession.shared
+        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/tracks/new")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+        
+        let data = convertJSONToData(item: newTracksRemote)
+        let str = String(decoding: data!, as: UTF8.self)
+        print(str)
+        
+        request.httpBody = data
+        
+        let task =  session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                return completion(nil, error.localizedDescription)
+            }
+            
+            // ensure there is data returned
+            guard let responseData = data else {
+                return completion(nil,"Invalid Response received from the server")
+            }
+            do {
+                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
+                    print(jsonResponse)
+                }
+                let newTracksResponse = try self.decoder.decode(NewTracksResponse.self, from: responseData)
+                return completion(newTracksResponse, "")
+            } catch let error {
+                return completion(nil,  error.localizedDescription)
+            }
+        }
+        
+        // perform the task
+        task.resume()
     }
     
     public func newTracks(sessionId:String, newTracksRemote: NewTracksRemote, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
