@@ -43,9 +43,9 @@ public class Calls{
     }
 
     public struct NewTracksRemote : Codable{
-        public var tracks:RemoteTracks
+        public var tracks:[RemoteTrack]
         
-        public init(tracks:RemoteTracks ){
+        public init(tracks:[RemoteTrack] ){
             self.tracks = tracks
         }
     }
