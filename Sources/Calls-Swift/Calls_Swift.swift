@@ -119,7 +119,7 @@ public class Calls{
         public var sessionId : String
         public var trackName : String
         
-        public init(location:String, sessionId : String, trackName :String, mid:String){
+        public init(location:String, sessionId : String, trackName :String){
             self.location = location
             self.sessionId = sessionId
             self.trackName = trackName
