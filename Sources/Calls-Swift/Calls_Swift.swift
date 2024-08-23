@@ -152,7 +152,7 @@ public class Calls{
     }
     
 
-    public func renegotiate(sessionId:String, sdp: NewDesc, completion:  @escaping (_ sdp: SessionDescription?, _ error:String)->()) async{
+    public func renegotiate(sessionId:String, sdp: NewDesc, completion:  @escaping (_ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/renegotiate")!
         var request = URLRequest(url: url)
@@ -169,21 +169,20 @@ public class Calls{
         
         let task =  session.dataTask(with: request) { data, response, error in
             if let error = error {
-                return completion(nil, error.localizedDescription)
+                return completion( error.localizedDescription)
             }
             
             // ensure there is data returned
             guard let responseData = data else {
-                return completion(nil,"Invalid Response received from the server")
+                return completion("Invalid Response received from the server")
             }
             do {
                 if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
                     print(jsonResponse)
                 }
-                let sdp = try self.decoder.decode(SessionDescription.self, from: responseData)
-                return completion( sdp, "")
+                return completion("OK")
             } catch let error {
-                return completion(nil,  error.localizedDescription)
+                return completion(error.localizedDescription)
             }
         }
         
