@@ -3,44 +3,80 @@
 
 import SwiftUI
 
-struct NewReq :Encodable, Decodable{
-    public var sdp : String
-    public var type : String
-}
-
-struct NewDesc : Encodable, Decodable{
-    public var sessionDescription : NewReq
-}
-
-public struct SessionDescription : Codable{
-    public var type :String
-    public var sdp :String
-}
-
-public struct SessionDescriptionOffer : Codable{
-    public var sessionDescription : SessionDescription
-}
-
-
-public struct NewTrack : Codable{
-    public var sessionDescription : SessionDescription
-    public var tracks : [Track]
-}
-
-public struct NewTracksResponse : Codable{
-    public var requiresImmediateRenegotiation = false
-    public var sessionDescription : SessionDescription
-    public var tracks : [Track]
-}
-
-public struct Track : Codable{
-    public var location :String
-    public var sessionId : String
-    public var trackName : String
-    public var mid : String
-}
-
 public class Calls{
+    
+    struct NewReq :Encodable, Decodable{
+        public var sdp : String
+        public var type : String
+        
+        public init(sdp:String, type : String){
+            self.sdp = sdp
+            self.type = type
+        }
+    }
+
+    struct NewDesc : Encodable, Decodable{
+        public var sessionDescription : NewReq
+        
+        public init(sessionDescription:NewReq){
+            self.sessionDescription = sessionDescription
+        }
+    }
+
+    public struct SessionDescription : Codable{
+        public var type :String
+        public var sdp :String
+        
+        public init(sdp :String, type:String){
+            self.sdp = sdp
+            self.type = type
+        }
+    }
+
+    public struct SessionDescriptionOffer : Codable{
+        public var sessionDescription : SessionDescription
+        
+        public init(sessionDescription:SessionDescription){
+            self.sessionDescription = sessionDescription
+        }
+    }
+
+    public struct NewTrack : Codable{
+        public var sessionDescription : SessionDescription
+        public var tracks : [Track]
+        
+        public init(sessionDescription:SessionDescription, tracks : [Track]){
+            self.sessionDescription = sessionDescription
+            self.tracks = tracks
+        }
+    }
+
+    public struct NewTracksResponse : Codable{
+        public var requiresImmediateRenegotiation = false
+        public var sessionDescription : SessionDescription
+        public var tracks : [Track]
+        
+        public init(requiresImmediateRenegotiation:Bool, sessionDescription : SessionDescription, tracks : [Track]){
+            self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
+            self.sessionDescription = sessionDescription
+            self.tracks = tracks
+        }
+    }
+
+    public struct Track : Codable{
+        public var location :String
+        public var sessionId : String
+        public var trackName : String
+        public var mid : String
+        
+        public init(location:String, sessionId : String, trackName :String, mid:String){
+            self.location = location
+            self.sessionId = sessionId
+            self.trackName = trackName
+            self.mid = mid
+        }
+    }
+    
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
     
