@@ -103,15 +103,14 @@ public class Calls{
 
     public struct LocalTrack : Codable{
         public var location :String
-        public var sessionId : String
-        public var trackName : String
         public var mid : String
+        public var trackName : String
+       
         
-        public init(location:String, sessionId : String, trackName :String, mid:String){
+        public init(location:String, mid : String, trackName :String){
             self.location = location
-            self.sessionId = sessionId
-            self.trackName = trackName
             self.mid = mid
+            self.trackName = trackName
         }
     }
     
@@ -119,13 +118,11 @@ public class Calls{
         public var location :String
         public var sessionId : String
         public var trackName : String
-        public var mid : String
         
         public init(location:String, sessionId : String, trackName :String, mid:String){
             self.location = location
             self.sessionId = sessionId
             self.trackName = trackName
-            self.mid = mid
         }
     }
     
