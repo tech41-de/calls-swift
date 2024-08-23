@@ -5,7 +5,7 @@ import SwiftUI
 
 public class Calls{
     
-    struct NewReq :Encodable, Decodable{
+    public struct NewReq :Encodable, Decodable{
         public var sdp : String
         public var type : String
         
@@ -15,7 +15,7 @@ public class Calls{
         }
     }
 
-    struct NewDesc : Encodable, Decodable{
+    public struct NewDesc : Encodable, Decodable{
         public var sessionDescription : NewReq
         
         public init(sessionDescription:NewReq){
@@ -98,9 +98,7 @@ public class Calls{
         var sessionId : String
     }
     
-
-    
-    public func Track(sessionId:String, newTrack: NewTrack, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
+    public func newTracks(sessionId:String, newTrack: NewTrack, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/tracks/new")!
         var request = URLRequest(url: url)
