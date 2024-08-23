@@ -7,7 +7,6 @@
 
 import Foundation
 import OpenAPIRuntime
-import Foundation
 import HTTPTypes
 
 /// A client middleware that injects a value into the `Authorization` header field of the request.
