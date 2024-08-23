@@ -25,12 +25,13 @@ public class Calls{
     }
 
     public struct SessionDescription : Codable{
-        public var sdp :String
         public var type :String
+        public var sdp :String
        
-        public init(sdp :String, type:String){
-            self.sdp = sdp
+        public init(type:String, sdp :String){
             self.type = type
+            self.sdp = sdp
+           
         }
     }
 
