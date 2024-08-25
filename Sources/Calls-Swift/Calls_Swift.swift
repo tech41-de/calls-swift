@@ -172,7 +172,7 @@ public class Calls{
             
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode != 200{
-                    return completion( error!.localizedDescription)
+                    return completion( String(httpResponse.statusCode))
                 }
             }
             
@@ -216,7 +216,7 @@ public class Calls{
         let task =  session.dataTask(with: request) { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode != 200{
-                    return completion(nil, error!.localizedDescription)
+                    return completion(nil,  String(httpResponse.statusCode))
                 }
             }
             
@@ -261,7 +261,7 @@ public class Calls{
         let task =  session.dataTask(with: request) { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode != 200{
-                    return completion(nil,  error?.localizedDescription)
+                    return completion(nil,  String(httpResponse.statusCode))
                 }
             }
             if let error = error {
@@ -304,7 +304,7 @@ public class Calls{
         let task =  session.dataTask(with: request) { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode != 201{
-                    return completion("", "", error!.localizedDescription)
+                    return completion("", "", String(httpResponse.statusCode))
                 }
             }
             if let error = error {
