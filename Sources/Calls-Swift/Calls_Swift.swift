@@ -169,6 +169,13 @@ public class Calls{
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200{
+                    return completion( error!.localizedDescription)
+                }
+            }
+            
             if let error = error {
                 return completion( error.localizedDescription)
             }
@@ -207,6 +214,12 @@ public class Calls{
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200{
+                    return completion(nil, error!.localizedDescription)
+                }
+            }
+            
             if let error = error {
                 return completion(nil, error.localizedDescription)
             }
@@ -246,6 +259,11 @@ public class Calls{
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200{
+                    return completion(nil, error!.localizedDescription)
+                }
+            }
             if let error = error {
                 return completion(nil, error.localizedDescription)
             }
@@ -284,6 +302,11 @@ public class Calls{
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 201{
+                    return completion("", "", error!.localizedDescription)
+                }
+            }
             if let error = error {
                 return completion("","",error.localizedDescription)
             }
