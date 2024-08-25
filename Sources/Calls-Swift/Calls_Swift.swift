@@ -243,7 +243,7 @@ public class Calls{
         task.resume()
     }
     
-    public func newTracks(sessionId:String, newTracksRemote: NewTracksRemote, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String)->()) async{
+    public func newTracks(sessionId:String, newTracksRemote: NewTracksRemote, completion:  @escaping (_ tracks: NewTracksResponse?, _ error:String?)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/tracks/new")!
         var request = URLRequest(url: url)
@@ -261,7 +261,7 @@ public class Calls{
         let task =  session.dataTask(with: request) { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode != 200{
-                    return completion(nil, error!.localizedDescription)
+                    return completion(nil,  error?.localizedDescription)
                 }
             }
             if let error = error {
