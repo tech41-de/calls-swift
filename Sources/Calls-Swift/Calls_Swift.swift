@@ -138,9 +138,9 @@ public class Calls{
     }
     
     public struct CloseTracksRequest : Codable{
-        var sessionDescription:SessionDescription
-        var tracks: LocalTrack
-        var force : Bool
+        public var sessionDescription:SessionDescription
+        public var tracks: LocalTrack
+        public var force : Bool
         
         public init(sessionDescription:SessionDescription, tracks: LocalTrack, force : Bool){
             self.sessionDescription = sessionDescription
@@ -150,9 +150,9 @@ public class Calls{
     }
     
     public struct CloseTracksResponse : Codable{
-        var sessionDescription:SessionDescription
-        var tracks: LocalTrack
-        var requiresImmediateRenegotiation : Bool
+        public var sessionDescription:SessionDescription
+        public var tracks: LocalTrack
+        public var requiresImmediateRenegotiation : Bool
         
         public init(sessionDescription:SessionDescription, requiresImmediateRenegotiation : Bool, tracks: LocalTrack){
             self.sessionDescription = sessionDescription
