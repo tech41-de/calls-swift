@@ -5,21 +5,27 @@
 import Foundation
 
 public class Calls{
+    var serverUrl = "https://rtc.live.cloudflare.com/v1"
+    var appId = ""
+    var secret = ""
     
-    public struct NewReq :Encodable, Decodable{
-        public var sdp : String
-        public var type : String
+    let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
+    
+    public init(){
         
-        public init(sdp:String, type : String){
-            self.sdp = sdp
-            self.type = type
-        }
     }
-
+    
+    public func configure(serverUrl:String, appId :String, secret:String){
+        self.serverUrl = serverUrl
+        self.appId = appId
+        self.secret = secret
+    }
+    
     public struct NewDesc : Encodable, Decodable{
-        public var sessionDescription : NewReq
+        public var sessionDescription : SessionDescription
         
-        public init(sessionDescription:NewReq){
+        public init(sessionDescription:SessionDescription){
             self.sessionDescription = sessionDescription
         }
     }
@@ -131,25 +137,36 @@ public class Calls{
         }
     }
     
-    let decoder = JSONDecoder()
-    let encoder = JSONEncoder()
-    
-    var serverUrl = "https://rtc.live.cloudflare.com/v1"
-    var appId = ""
-    var secret = ""
-    
-    public init(){
+    public struct CloseTracksRequest : Codable{
+        var sessionDescription:SessionDescription
+        var tracks: LocalTrack
+        var force : Bool
         
+        public init(sessionDescription:SessionDescription, tracks: LocalTrack, force : Bool){
+            self.sessionDescription = sessionDescription
+            self.tracks = tracks
+            self.force = force
+        }
     }
-
-    public func configure(serverUrl:String, appId :String, secret:String){
-        self.serverUrl = serverUrl
-        self.appId = appId
-        self.secret = secret
+    
+    public struct CloseTracksResponse : Codable{
+        var sessionDescription:SessionDescription
+        var tracks: LocalTrack
+        var requiresImmediateRenegotiation : Bool
+        
+        public init(sessionDescription:SessionDescription, requiresImmediateRenegotiation : Bool, tracks: LocalTrack){
+            self.sessionDescription = sessionDescription
+            self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
+            self.tracks = tracks
+        }
     }
-   
-    struct sid{
-        var sessionId : String
+    
+    public struct GetSessionStateResponse: Codable{
+        var tracks: LocalTrack
+        
+        public init(tracks:LocalTrack){
+            self.tracks = tracks
+        }
     }
     
 
@@ -296,7 +313,7 @@ public class Calls{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        let newReq = NewReq(sdp:sdp, type:"offer")
+        let newReq = SessionDescription(type:"offer", sdp:sdp)
         let desc = NewDesc(sessionDescription:newReq)
         let data = convertJSONToData(item: desc)
         request.httpBody = data
@@ -333,8 +350,87 @@ public class Calls{
         // perform the task
         task.resume()
     }
-
     
+    func close(sessionId:String, closeTracksRequest:CloseTracksRequest, completion:  @escaping (_ closeTracksResponse:CloseTracksResponse?,  _ error:String)->()) async{
+        let session = URLSession.shared
+        let url = URL(string: serverUrl + appId + "/sessions" + sessionId + "/tracks/close")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+
+        let data = convertJSONToData(item: closeTracksRequest)
+        request.httpBody = data
+        
+        let task =  session.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200{
+                    return completion(nil, String(httpResponse.statusCode))
+                }
+            }
+            if let error = error {
+                return completion(nil,error.localizedDescription)
+            }
+            
+            // ensure there is data returned
+            guard let responseData = data else {
+                return completion(nil,"Invalid Response received from the server")
+            }
+            
+            do {
+                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
+                    let res = try self.decoder.decode(CloseTracksResponse.self, from: responseData)
+                    return completion(res,"")
+                } else {
+                    return completion(nil, "data maybe corrupted or in wrong format")
+                }
+            } catch let error {
+                return completion(nil, error.localizedDescription)
+            }
+        }
+        
+        // perform the task
+        task.resume()
+    }
+    
+    
+    func getSession(sessionId:String, completion:  @escaping (_ getSessionStateResponse:GetSessionStateResponse?,  _ error:String)->()) async{
+        let session = URLSession.shared
+        let url = URL(string: serverUrl + appId + "/sessions/" + sessionId)!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+
+        let task =  session.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200{
+                    return completion(nil, String(httpResponse.statusCode))
+                }
+            }
+            if let error = error {
+                return completion(nil,error.localizedDescription)
+            }
+            
+            // ensure there is data returned
+            guard let responseData = data else {
+                return completion(nil,"Invalid Response received from the server")
+            }
+            
+            do {
+                let res = try self.decoder.decode(GetSessionStateResponse.self, from: responseData)
+                return completion(res, "")
+            } catch let error {
+                return completion(nil, error.localizedDescription)
+            }
+        }
+        
+        // perform the task
+        task.resume()
+    }
+
     func convertJSONToData<T: Encodable>(item: T) -> Data? {
         do {
             let encodedJSON = try JSONEncoder().encode(item)
