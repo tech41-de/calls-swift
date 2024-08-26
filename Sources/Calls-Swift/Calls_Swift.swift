@@ -100,6 +100,20 @@ public class Calls{
             self.mid = mid
         }
     }
+    
+    public struct Track : Codable{
+        public var location : String
+        public var sessionId : String
+        public var trackName : String
+        public var mid : String
+       
+        public init(location : String, sessionId : String, trackName :String, mid:String){
+            self.location = location
+            self.sessionId = sessionId
+            self.trackName = trackName
+            self.mid = mid
+        }
+    }
 
     public struct NewTracksResponse : Codable{
         public var requiresImmediateRenegotiation : Bool
@@ -162,9 +176,9 @@ public class Calls{
     }
     
     public struct GetSessionStateResponse: Codable{
-        public var tracks: LocalTrack
+        public var tracks: [Track]
         
-        public init(tracks:LocalTrack){
+        public init(tracks:[Track]){
             self.tracks = tracks
         }
     }
