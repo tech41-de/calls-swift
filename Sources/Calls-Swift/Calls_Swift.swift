@@ -428,9 +428,13 @@ public class Calls{
             }
             
             // ensure there is data returned
+            
             guard let responseData = data else {
                 return completion(nil,"Invalid Response received from the server")
             }
+            
+            let str = String(decoding: responseData, as: UTF8.self)
+            print(str)
             
             do {
                 let res = try self.decoder.decode(GetSessionStateResponse.self, from: responseData)
