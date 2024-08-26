@@ -162,7 +162,7 @@ public class Calls{
     }
     
     public struct GetSessionStateResponse: Codable{
-        var tracks: LocalTrack
+        public var tracks: LocalTrack
         
         public init(tracks:LocalTrack){
             self.tracks = tracks
