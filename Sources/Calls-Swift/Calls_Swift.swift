@@ -177,9 +177,11 @@ public class Calls{
     
     public struct GetSessionStateResponse: Codable{
         public var tracks: [Track]
+        public var dataChannels: [Track]
         
-        public init(tracks:[Track]){
+        public init(tracks:[Track], dataChannels: [Track]){
             self.tracks = tracks
+            self.dataChannels = dataChannels
         }
     }
     
