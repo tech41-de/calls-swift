@@ -159,13 +159,13 @@ public class Calls{
     }
     
     public struct CloseTracksRequest : Codable{
-        public var sessionDescription:SessionDescription
         public var tracks: [ClosedTrack]
+        public var sessionDescription:SessionDescription
         public var force : Bool
         
-        public init(sessionDescription:SessionDescription, tracks: [ClosedTrack], force : Bool){
-            self.sessionDescription = sessionDescription
+        public init(tracks: [ClosedTrack], sessionDescription:SessionDescription, force : Bool){
             self.tracks = tracks
+            self.sessionDescription = sessionDescription
             self.force = force
         }
     }
