@@ -169,45 +169,46 @@ public class Calls{
         }
     }
     
-
-    public func renegotiate(sessionId:String, sdp: NewDesc, completion:  @escaping (_ error:String)->()) async{
+    public func newSession(sdp:String, completion:  @escaping (_ sessionId:String, _ sdp:String, _ error:String)->()) async{
         let session = URLSession.shared
-        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/renegotiate")!
+        let url = URL(string: serverUrl + appId + "/sessions/new")!
         var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
+        request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        let data = convertJSONToData(item: sdp)
-        let str = String(decoding: data!, as: UTF8.self)
-        print(str)
-        
+        let newReq = SessionDescription(type:"offer", sdp:sdp)
+        let desc = NewDesc(sessionDescription:newReq)
+        let data = convertJSONToData(item: desc)
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
-            
             if let httpResponse = response as? HTTPURLResponse {
-                if httpResponse.statusCode != 200{
-                    return completion( String(httpResponse.statusCode))
+                if httpResponse.statusCode != 201{
+                    return completion("", "", String(httpResponse.statusCode))
                 }
             }
-            
             if let error = error {
-                return completion( error.localizedDescription)
+                return completion("","",error.localizedDescription)
             }
             
             // ensure there is data returned
             guard let responseData = data else {
-                return completion("Invalid Response received from the server")
+                return completion("","","Invalid Response received from the server")
             }
+            
             do {
                 if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
-                    print(jsonResponse)
+                   
+                    let desc = try self.decoder.decode(NewDesc.self, from: responseData)
+                    let sessionIdStr =  jsonResponse["sessionId"]
+                    return completion(sessionIdStr as! String, desc.sessionDescription.sdp,"")
+                } else {
+                    return completion("","", "data maybe corrupted or in wrong format")
                 }
-                return completion("OK")
             } catch let error {
-                return completion(error.localizedDescription)
+                return completion("","", error.localizedDescription)
             }
         }
         
@@ -304,46 +305,44 @@ public class Calls{
         task.resume()
     }
     
-    public func newSession(sdp:String, completion:  @escaping (_ sessionId:String, _ sdp:String, _ error:String)->()) async{
+    public func renegotiate(sessionId:String, sdp: NewDesc, completion:  @escaping (_ error:String)->()) async{
         let session = URLSession.shared
-        let url = URL(string: serverUrl + appId + "/sessions/new")!
+        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/renegotiate")!
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "PUT"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        let newReq = SessionDescription(type:"offer", sdp:sdp)
-        let desc = NewDesc(sessionDescription:newReq)
-        let data = convertJSONToData(item: desc)
+        let data = convertJSONToData(item: sdp)
+        let str = String(decoding: data!, as: UTF8.self)
+        print(str)
+        
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
+            
             if let httpResponse = response as? HTTPURLResponse {
-                if httpResponse.statusCode != 201{
-                    return completion("", "", String(httpResponse.statusCode))
+                if httpResponse.statusCode != 200{
+                    return completion( String(httpResponse.statusCode))
                 }
             }
+            
             if let error = error {
-                return completion("","",error.localizedDescription)
+                return completion( error.localizedDescription)
             }
             
             // ensure there is data returned
             guard let responseData = data else {
-                return completion("","","Invalid Response received from the server")
+                return completion("Invalid Response received from the server")
             }
-            
             do {
                 if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
-                   
-                    let desc = try self.decoder.decode(NewDesc.self, from: responseData)
-                    let sessionIdStr =  jsonResponse["sessionId"]
-                    return completion(sessionIdStr as! String, desc.sessionDescription.sdp,"")
-                } else {
-                    return completion("","", "data maybe corrupted or in wrong format")
+                    print(jsonResponse)
                 }
+                return completion("OK")
             } catch let error {
-                return completion("","", error.localizedDescription)
+                return completion(error.localizedDescription)
             }
         }
         
@@ -351,7 +350,7 @@ public class Calls{
         task.resume()
     }
     
-    func close(sessionId:String, closeTracksRequest:CloseTracksRequest, completion:  @escaping (_ closeTracksResponse:CloseTracksResponse?,  _ error:String)->()) async{
+    public func close(sessionId:String, closeTracksRequest:CloseTracksRequest, completion:  @escaping (_ closeTracksResponse:CloseTracksResponse?,  _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions" + sessionId + "/tracks/close")!
         var request = URLRequest(url: url)
@@ -395,7 +394,7 @@ public class Calls{
     }
     
     
-    func getSession(sessionId:String, completion:  @escaping (_ getSessionStateResponse:GetSessionStateResponse?,  _ error:String)->()) async{
+    public func getSession(sessionId:String, completion:  @escaping (_ getSessionStateResponse:GetSessionStateResponse?,  _ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" + sessionId)!
         var request = URLRequest(url: url)
