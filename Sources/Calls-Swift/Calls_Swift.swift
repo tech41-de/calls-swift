@@ -101,6 +101,13 @@ public class Calls{
         }
     }
     
+    public struct ClosedTrack : Codable{
+        public var mid : String
+        public init(mid : String){
+            self.mid = mid
+        }
+    }
+    
     public struct Track : Codable{
         public var location : String
         public var trackName : String
@@ -165,10 +172,10 @@ public class Calls{
     
     public struct CloseTracksResponse : Codable{
         public var sessionDescription:SessionDescription
-        public var tracks: LocalTrack
+        public var tracks: [ClosedTrack]
         public var requiresImmediateRenegotiation : Bool
         
-        public init(sessionDescription:SessionDescription, requiresImmediateRenegotiation : Bool, tracks: LocalTrack){
+        public init(sessionDescription:SessionDescription, requiresImmediateRenegotiation : Bool, tracks: [ClosedTrack]){
             self.sessionDescription = sessionDescription
             self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
             self.tracks = tracks
