@@ -103,15 +103,15 @@ public class Calls{
     
     public struct Track : Codable{
         public var location : String
-        public var sessionId : String
         public var trackName : String
         public var mid : String
+        public var status : String
        
-        public init(location : String, sessionId : String, trackName :String, mid:String){
+        public init(location : String, trackName :String, mid:String, status:String){
             self.location = location
-            self.sessionId = sessionId
             self.trackName = trackName
             self.mid = mid
+            self.status = status
         }
     }
 
