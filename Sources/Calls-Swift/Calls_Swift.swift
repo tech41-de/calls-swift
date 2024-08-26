@@ -360,7 +360,7 @@ public class Calls{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions" + sessionId + "/tracks/close")!
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "PUT"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
