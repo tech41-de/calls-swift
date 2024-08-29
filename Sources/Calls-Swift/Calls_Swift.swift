@@ -21,6 +21,36 @@ public class Calls{
         self.appId = appId
         self.secret = secret
     }
+
+    public struct DataChannel : Encodable, Decodable{
+        public var location : String
+        public var dataChannelName : String
+        public var id : String
+        public var sessionId : String
+        
+        public init(location:String, dataChannelName:String, id:String = "", sessionId : String = ""){
+            self.location = location
+            self.dataChannelName = dataChannelName
+            self.id = id
+            self.sessionId = sessionId
+        }
+    }
+    
+    public struct DataChannelReq : Encodable, Decodable{
+        public var dataChannels : [DataChannel]
+        
+        public init(dataChannels:[DataChannel]){
+            self.dataChannels = dataChannels
+        }
+    }
+    
+    public struct DataChannelRes : Encodable, Decodable{
+        public var dataChannels : [DataChannel]
+        
+        public init(dataChannels: [DataChannel]){
+            self.dataChannels = dataChannels
+        }
+    }
     
     public struct NewDesc : Encodable, Decodable{
         public var sessionDescription : SessionDescription
@@ -37,7 +67,6 @@ public class Calls{
         public init(type:String, sdp :String){
             self.type = type
             self.sdp = sdp
-           
         }
     }
 
@@ -434,6 +463,46 @@ public class Calls{
         // perform the task
         task.resume()
     }
+    
+   
+    public func newDataChannel(sessionId:String, dataChannelReq: DataChannelReq, completion:  @escaping (_ dataChannelRes: DataChannelRes?, _ error:String?)->()) async{
+        let session = URLSession.shared
+        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/dataChannel/new")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+        
+        let data = convertJSONToData(item: dataChannelReq)
+        request.httpBody = data
+
+        let task =  session.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200{
+                    return completion(nil,  String(httpResponse.statusCode))
+                }
+            }
+            if let error = error {
+                return completion(nil, error.localizedDescription)
+            }
+            
+            // ensure there is data returned
+            guard let responseData = data else {
+                return completion(nil,"Invalid Response received from the server")
+            }
+            do {
+                let dataChannelRes = try self.decoder.decode(DataChannelRes.self, from: responseData)
+                return completion(dataChannelRes, "")
+            } catch let error {
+                return completion(nil,  error.localizedDescription)
+            }
+        }
+        
+        // perform the task
+        task.resume()
+    }
+
 
     func convertJSONToData<T: Encodable>(item: T) -> Data? {
         do {
