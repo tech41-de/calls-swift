@@ -43,7 +43,18 @@ public class Calls{
         }
     }
 
-    public struct DataChannel : Encodable, Decodable{
+    public struct DataChannelLocalResItem : Encodable, Decodable{
+        public var location : String = ""
+        public var dataChannelName : String = ""
+
+ 
+        public init(location:String, dataChannelName:String){
+            self.location = location
+            self.dataChannelName = dataChannelName
+        }
+    }
+    
+    public struct DataChannelRemoteItem : Encodable, Decodable{
         public var location : String = ""
         public var dataChannelName : String = ""
         public var id : String = ""
@@ -75,10 +86,18 @@ public class Calls{
         }
     }
     
-    public struct DataChannelRes : Encodable, Decodable{
-        public var dataChannels : [DataChannel]
+    public struct DataChannelLocalRes : Encodable, Decodable{
+        public var dataChannels : [DataChannelLocalResItem]
         
-        public init(dataChannels: [DataChannel]){
+        public init(dataChannels: [DataChannelLocalResItem]){
+            self.dataChannels = dataChannels
+        }
+    }
+    
+    public struct DataChannelRemoteRes : Encodable, Decodable{
+        public var dataChannels : [DataChannelRemoteItem]
+        
+        public init(dataChannels: [DataChannelRemoteItem]){
             self.dataChannels = dataChannels
         }
     }
@@ -499,7 +518,7 @@ public class Calls{
     }
     
    
-    public func newDataChannel(sessionId:String, dataChannelReq: DataChannelLocalReq, completion:  @escaping (_ dataChannelRes: DataChannelRes?, _ error:String?)->()) async{
+    public func newDataChannel(sessionId:String, dataChannelReq: DataChannelLocalReq, completion:  @escaping (_ dataChannelRes: DataChannelLocalRes?, _ error:String?)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/datachannels/new")!
         var request = URLRequest(url: url)
@@ -528,7 +547,7 @@ public class Calls{
                 return completion(nil,"Invalid Response received from the server")
             }
             do {
-                let dataChannelRes = try self.decoder.decode(DataChannelRes.self, from: responseData)
+                let dataChannelRes = try self.decoder.decode(DataChannelLocalRes.self, from: responseData)
                 return completion(dataChannelRes, "")
             } catch let error {
                 return completion(nil,  error.localizedDescription)
@@ -539,7 +558,7 @@ public class Calls{
         task.resume()
     }
     
-    public func newDataChannelRemote(sessionId:String, dataChannelReq: DataChannelRemoteReq, completion:  @escaping (_ dataChannelRes: DataChannelRes?, _ error:String?)->()) async{
+    public func newDataChannelRemote(sessionId:String, dataChannelReq: DataChannelRemoteReq, completion:  @escaping (_ dataChannelRes: DataChannelRemoteRes?, _ error:String?)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/datachannels/new")!
         var request = URLRequest(url: url)
@@ -568,7 +587,7 @@ public class Calls{
                 return completion(nil,"Invalid Response received from the server")
             }
             do {
-                let dataChannelRes = try self.decoder.decode(DataChannelRes.self, from: responseData)
+                let dataChannelRes = try self.decoder.decode(DataChannelRemoteRes.self, from: responseData)
                 return completion(dataChannelRes, "")
             } catch let error {
                 return completion(nil,  error.localizedDescription)
