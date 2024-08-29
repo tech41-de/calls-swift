@@ -98,12 +98,12 @@ public class Calls{
         }
     }
     
-    public struct DataChannel : Codable{
-        public var location : String = ""
-        public var sessionId : String = ""
-        public var dataChannelName : String = ""
-        public var id : String = ""
-        public var status : String = ""
+    public struct DataChannel : Decodable{
+        public var location : String?
+        public var sessionId : String?
+        public var dataChannelName : String?
+        public var id : String?
+        public var status : String?
 
         public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String){
             self.location = location
@@ -274,9 +274,9 @@ public class Calls{
         }
     }
     
-    public struct GetSessionStateResponse: Codable{
-        public var tracks: [Track]
-        public var dataChannels: [DataChannel]
+    public struct GetSessionStateResponse: Decodable{
+        public var tracks: [Track]?
+        public var dataChannels: [DataChannel]?
 
         public init(tracks:[Track], dataChannels: [DataChannel]){
             self.tracks = tracks
