@@ -104,13 +104,15 @@ public class Calls{
         public var dataChannelName : String = ""
         public var id : String = ""
         public var status : String = ""
+        public var mid : String = ""
         
-        public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String){
+        public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String, mid:String){
             self.location = location
             self.sessionId = sessionId
             self.dataChannelName = dataChannelName
             self.id = id
             self.status = status
+            self.mid = mid
         }
     }
     
