@@ -22,6 +22,27 @@ public class Calls{
         self.secret = secret
     }
 
+    public struct DataChannelLocal : Encodable, Decodable{
+        public var location : String = ""
+        public var dataChannelName : String = ""
+        public init(location:String, dataChannelName:String){
+            self.location = location
+            self.dataChannelName = dataChannelName
+        }
+    }
+    
+    public struct DataChannelRemote : Encodable, Decodable{
+        public var location : String = ""
+        public var dataChannelName : String = ""
+        public var sessionId : String = ""
+        
+        public init(location:String, dataChannelName:String, sessionId : String){
+            self.location = location
+            self.dataChannelName = dataChannelName
+            self.sessionId = sessionId
+        }
+    }
+    
     public struct DataChannel : Encodable, Decodable{
         public var location : String = ""
         public var dataChannelName : String = ""
@@ -36,10 +57,18 @@ public class Calls{
         }
     }
     
-    public struct DataChannelReq : Encodable, Decodable{
-        public var dataChannels : [DataChannel]
+    public struct DataChannelLocalReq : Encodable, Decodable{
+        public var dataChannels : [DataChannelLocal]
         
-        public init(dataChannels:[DataChannel]){
+        public init(dataChannels:[DataChannelLocal]){
+            self.dataChannels = dataChannels
+        }
+    }
+    
+    public struct DataChannelRemoteReq : Encodable, Decodable{
+        public var dataChannels : [DataChannelRemote]
+        
+        public init(dataChannels:[DataChannelRemote]){
             self.dataChannels = dataChannels
         }
     }
@@ -465,7 +494,7 @@ public class Calls{
     }
     
    
-    public func newDataChannel(sessionId:String, dataChannelReq: DataChannelReq, completion:  @escaping (_ dataChannelRes: DataChannelRes?, _ error:String?)->()) async{
+    public func newDataChannel(sessionId:String, dataChannelReq: DataChannelLocalReq, completion:  @escaping (_ dataChannelRes: DataChannelRes?, _ error:String?)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/datachannels/new")!
         var request = URLRequest(url: url)
