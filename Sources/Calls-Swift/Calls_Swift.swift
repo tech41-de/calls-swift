@@ -46,14 +46,10 @@ public class Calls{
     public struct DataChannel : Encodable, Decodable{
         public var location : String = ""
         public var dataChannelName : String = ""
-        public var id : String = ""
-        public var sessionId : String = ""
-        
-        public init(location:String, dataChannelName:String, id:String = "", sessionId : String = ""){
+ 
+        public init(location:String, dataChannelName:String){
             self.location = location
             self.dataChannelName = dataChannelName
-            self.id = id
-            self.sessionId = sessionId
         }
     }
     
