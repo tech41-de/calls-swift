@@ -63,13 +63,12 @@ public class Calls{
     public struct DataChannel : Decodable{
         
         enum CodingKeys: String, CodingKey {
-                //Uncomment the following commentted lines, if your JSON formatted data comes with different keys like bellow
-                case location       //= "user_name"
-                case dataChannelName
-                case id//= "user_message"
-                case status
-                case sessionId
-            }
+            case location
+            case dataChannelName
+            case id
+            case status
+            case sessionId
+        }
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -98,10 +97,16 @@ public class Calls{
     public struct GetSessionStateResponse: Decodable{
         public var tracks: [Track]
         public var dataChannels: [DataChannel]
+        
+        enum CodingKeys: String, CodingKey {
+            case tracks
+            case dataChannels
+        }
 
-        public init(tracks:[Track], dataChannels: [DataChannel]){
-            self.tracks = tracks
-            self.dataChannels = dataChannels
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            tracks = try container.decode([Track].self, forKey: .tracks)
+            dataChannels = try container.decode([DataChannel].self, forKey: .dataChannels)
         }
     }
 
