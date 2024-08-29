@@ -24,6 +24,31 @@ public class Calls{
     
     // get Session
     public struct Track : Decodable{
+        
+        enum CodingKeys: String, CodingKey {
+            case location
+            case trackName
+            case mid
+            case status
+            case sessionId
+        }
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            location = try container.decode(String.self, forKey: .location)
+            if location == "local"{
+                trackName = try container.decode(String.self, forKey: .trackName)
+                mid = try container.decode(String.self, forKey: .mid)
+                status = try container.decode(String.self, forKey: .status)
+            }
+            if location == "remote"{
+                trackName = try container.decode(String.self, forKey: .trackName)
+                sessionId = try container.decode(String.self, forKey: .sessionId)
+                mid = try container.decode(String.self, forKey: .mid)
+                status = try container.decode(String.self, forKey: .status)
+            }
+        }
+        
         public var location : String?
         public var trackName : String?
         public var mid : String?
@@ -39,7 +64,37 @@ public class Calls{
         }
     }
     
+    /*
+     {"tracks":[{"location":"local","trackName":"a_900CF0AE-1DB4-44FA-9E00-39F25D74BFE3","mid":"1","status":"active"},{"location":"local","trackName":"v_7E7B5AC7-875D-48EB-B629-D8F2350E6342","mid":"2","status":"active"},{"location":"remote","sessionId":"199672c611810f350895672ea037f22b","trackName":"a_869256E3-45AB-4459-836C-0B8DDAF8EE20","mid":"5","status":"active"},{"location":"remote","sessionId":"199672c611810f350895672ea037f22b","trackName":"v_F70ADF9B-A7EA-4B42-A6D9-3EB67CF0A3AF","mid":"6","status":"active"}],"dataChannels":[{"location":"remote","sessionId":"199672c611810f350895672ea037f22b","dataChannelName":"d_EE60DA09-AF92-404A-81C1-B8A3DC83878F","id":1,"status":"initializing"},{"location":"local","dataChannelName":"d_6EB593D1-64C0-4EB5-A75F-DF94780751B1","id":2,"status":"initializing"}]}
+     */
+
     public struct DataChannel : Decodable{
+        
+        enum CodingKeys: String, CodingKey {
+                //Uncomment the following commentted lines, if your JSON formatted data comes with different keys like bellow
+                case location       //= "user_name"
+                case dataChannelName
+                case id//= "user_message"
+                case status
+                case sessionId
+            }
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            location = try container.decode(String.self, forKey: .location)
+            if location == "local"{
+                dataChannelName = try container.decode(String.self, forKey: .dataChannelName)
+                id = try container.decode(String.self, forKey: .id)
+                status = try container.decode(String.self, forKey: .status)
+            }
+            if location == "remote"{
+                dataChannelName = try container.decode(String.self, forKey: .dataChannelName)
+                id = try container.decode(String.self, forKey: .id)
+                status = try container.decode(String.self, forKey: .status)
+                sessionId = try container.decode(String.self, forKey: .sessionId)
+            }
+        }
+  
         public var location : String?
         public var sessionId : String?
         public var dataChannelName : String?
@@ -54,6 +109,7 @@ public class Calls{
             self.status = status
         }
     }
+
     
     public struct GetSessionStateResponse: Decodable{
         public var tracks: [Track]?
