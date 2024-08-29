@@ -75,12 +75,12 @@ public class Calls{
             location = try container.decode(String.self, forKey: .location)
             if location == "local"{
                 dataChannelName = try container.decode(String.self, forKey: .dataChannelName)
-                id = try container.decode(String.self, forKey: .id)
+                id = try container.decode(Int.self, forKey: .id)
                 status = try container.decode(String.self, forKey: .status)
             }
             if location == "remote"{
                 dataChannelName = try container.decode(String.self, forKey: .dataChannelName)
-                id = try container.decode(String.self, forKey: .id)
+                id = try container.decode(Int.self, forKey: .id)
                 status = try container.decode(String.self, forKey: .status)
                 sessionId = try container.decode(String.self, forKey: .sessionId)
             }
@@ -89,7 +89,7 @@ public class Calls{
         public var location : String?
         public var sessionId : String?
         public var dataChannelName : String?
-        public var id : String?
+        public var id : Int = 0
         public var status : String?
     }
 
