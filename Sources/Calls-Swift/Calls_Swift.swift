@@ -104,15 +104,13 @@ public class Calls{
         public var dataChannelName : String = ""
         public var id : String = ""
         public var status : String = ""
-        public var mid : String = ""
-        
-        public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String, mid:String){
+
+        public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String){
             self.location = location
             self.sessionId = sessionId
             self.dataChannelName = dataChannelName
             self.id = id
             self.status = status
-            self.mid = mid
         }
     }
     
@@ -201,19 +199,18 @@ public class Calls{
         }
     }
     
+
     public struct Track : Codable{
         public var location : String
         public var trackName : String
         public var mid : String
         public var status : String
-        public var id : String
        
-        public init(location : String, trackName :String, mid:String = "", status:String = "", id:String = ""){
+        public init(location : String, trackName :String, mid:String = "", status:String = ""){
             self.location = location
             self.trackName = trackName
             self.mid = mid
             self.status = status
-            self.id = id
         }
     }
 
