@@ -42,14 +42,20 @@ public class Calls{
             self.sessionId = sessionId
         }
     }
-    
+
     public struct DataChannel : Encodable, Decodable{
         public var location : String = ""
         public var dataChannelName : String = ""
+        public var id : String = ""
+        public var status : String = ""
+        public var sessionId : String = ""
  
-        public init(location:String, dataChannelName:String){
+        public init(location:String, dataChannelName:String, id:String = "", status:String = "", sessionId:String = "" ){
             self.location = location
             self.dataChannelName = dataChannelName
+            self.id = dataChannelName
+            self.status = dataChannelName
+            self.sessionId = dataChannelName
         }
     }
     
@@ -167,12 +173,14 @@ public class Calls{
         public var trackName : String
         public var mid : String
         public var status : String
+        public var id : String
        
-        public init(location : String, trackName :String, mid:String, status:String){
+        public init(location : String, trackName :String, mid:String = "", status:String = "", id:String = ""){
             self.location = location
             self.trackName = trackName
             self.mid = mid
             self.status = status
+            self.id = id
         }
     }
 
@@ -239,6 +247,7 @@ public class Calls{
     public struct GetSessionStateResponse: Codable{
         public var tracks: [Track]
         public var dataChannels: [Track]
+
         
         public init(tracks:[Track], dataChannels: [Track]){
             self.tracks = tracks
