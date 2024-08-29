@@ -467,7 +467,7 @@ public class Calls{
    
     public func newDataChannel(sessionId:String, dataChannelReq: DataChannelReq, completion:  @escaping (_ dataChannelRes: DataChannelRes?, _ error:String?)->()) async{
         let session = URLSession.shared
-        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/dataChannel/new")!
+        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/datachannels/new")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
