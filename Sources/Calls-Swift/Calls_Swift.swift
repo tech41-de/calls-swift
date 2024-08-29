@@ -47,7 +47,6 @@ public class Calls{
         public var location : String = ""
         public var dataChannelName : String = ""
 
- 
         public init(location:String, dataChannelName:String){
             self.location = location
             self.dataChannelName = dataChannelName
@@ -66,7 +65,7 @@ public class Calls{
         }
     }
     
-    public struct DataChannelLocalReq : Encodable, Decodable{
+    public struct DataChannelLocalReq : Encodable{
         public var dataChannels : [DataChannelLocal]
         
         public init(dataChannels:[DataChannelLocal]){
@@ -74,7 +73,7 @@ public class Calls{
         }
     }
     
-    public struct DataChannelRemoteReq : Encodable, Decodable{
+    public struct DataChannelRemoteReq : Encodable{
         public var dataChannels : [DataChannelRemote]
         
         public init(dataChannels:[DataChannelRemote]){
@@ -82,7 +81,7 @@ public class Calls{
         }
     }
     
-    public struct DataChannelLocalRes : Encodable, Decodable{
+    public struct DataChannelLocalRes : Decodable{
         public var dataChannels : [DataChannelLocalResItem]
         
         public init(dataChannels: [DataChannelLocalResItem]){
@@ -90,7 +89,7 @@ public class Calls{
         }
     }
     
-    public struct DataChannelRemoteRes : Encodable, Decodable{
+    public struct DataChannelRemoteRes : Decodable{
         public var dataChannels : [DataChannelRemoteItem]
         
         public init(dataChannels: [DataChannelRemoteItem]){
@@ -158,7 +157,7 @@ public class Calls{
         }
     }
     
-    public struct LocalTracksRes : Codable{
+    public struct LocalTracksRes : Decodable{
         public var requiresImmediateRenegotiation : Bool
         public var sessionDescription : SessionDescription
         public var tracks : [LocalTrack]
@@ -170,7 +169,7 @@ public class Calls{
         }
     }
     
-    public struct RemoteTracksRes : Codable{
+    public struct RemoteTracksRes : Decodable{
         public var requiresImmediateRenegotiation: Bool
         public var tracks : [RemoteTrack]
         
@@ -180,7 +179,7 @@ public class Calls{
         }
     }
     
-    public struct NewTracksRes : Codable{
+    public struct NewTracksRes : Decodable{
         public var sessionId : String?
         public var trackName : String
         public var mid : String
@@ -199,14 +198,13 @@ public class Calls{
         }
     }
     
-
-    public struct Track : Codable{
-        public var location : String
-        public var trackName : String
-        public var mid : String
-        public var status : String
+    public struct Track : Decodable{
+        public var location : String?
+        public var trackName : String?
+        public var mid : String?
+        public var status : String?
        
-        public init(location : String, trackName :String, mid:String = "", status:String = ""){
+        public init(location : String?, trackName :String?, mid:String?, status:String?){
             self.location = location
             self.trackName = trackName
             self.mid = mid
@@ -214,7 +212,7 @@ public class Calls{
         }
     }
 
-    public struct NewTracksResponse : Codable{
+    public struct NewTracksResponse : Decodable{
         public var requiresImmediateRenegotiation : Bool
         public var tracks : [NewTracksRes]
         public var sessionDescription : SessionDescription
@@ -262,7 +260,7 @@ public class Calls{
         }
     }
     
-    public struct CloseTracksResponse : Codable{
+    public struct CloseTracksResponse : Decodable{
         public var sessionDescription:SessionDescription
         public var tracks: [ClosedTrack]
         public var requiresImmediateRenegotiation : Bool
