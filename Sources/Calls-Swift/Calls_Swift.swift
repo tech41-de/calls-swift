@@ -23,10 +23,10 @@ public class Calls{
     }
 
     public struct DataChannel : Encodable, Decodable{
-        public var location : String
-        public var dataChannelName : String
-        public var id : String
-        public var sessionId : String
+        public var location : String = ""
+        public var dataChannelName : String = ""
+        public var id : String = ""
+        public var sessionId : String = ""
         
         public init(location:String, dataChannelName:String, id:String = "", sessionId : String = ""){
             self.location = location
@@ -475,6 +475,8 @@ public class Calls{
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
         let data = convertJSONToData(item: dataChannelReq)
+        let str = String(decoding: data!, as: UTF8.self)
+        print(str)
         request.httpBody = data
 
         let task =  session.dataTask(with: request) { data, response, error in
