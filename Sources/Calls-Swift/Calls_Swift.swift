@@ -529,6 +529,46 @@ public class Calls{
         // perform the task
         task.resume()
     }
+    
+    public func newDataChannelRemote(sessionId:String, dataChannelReq: DataChannelRemoteReq, completion:  @escaping (_ dataChannelRes: DataChannelRes?, _ error:String?)->()) async{
+        let session = URLSession.shared
+        let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/datachannels/new")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
+        
+        let data = convertJSONToData(item: dataChannelReq)
+        let str = String(decoding: data!, as: UTF8.self)
+        print(str)
+        request.httpBody = data
+
+        let task =  session.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200{
+                    return completion(nil,  String(httpResponse.statusCode))
+                }
+            }
+            if let error = error {
+                return completion(nil, error.localizedDescription)
+            }
+            
+            // ensure there is data returned
+            guard let responseData = data else {
+                return completion(nil,"Invalid Response received from the server")
+            }
+            do {
+                let dataChannelRes = try self.decoder.decode(DataChannelRes.self, from: responseData)
+                return completion(dataChannelRes, "")
+            } catch let error {
+                return completion(nil,  error.localizedDescription)
+            }
+        }
+        
+        // perform the task
+        task.resume()
+    }
 
 
     func convertJSONToData<T: Encodable>(item: T) -> Data? {
