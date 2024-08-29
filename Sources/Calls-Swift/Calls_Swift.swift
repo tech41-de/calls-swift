@@ -57,15 +57,11 @@ public class Calls{
     public struct DataChannelRemoteItem : Encodable, Decodable{
         public var location : String = ""
         public var dataChannelName : String = ""
-        public var id : String = ""
-        public var status : String = ""
         public var sessionId : String = ""
  
-        public init(location:String, dataChannelName:String, id:String = "", status:String = "", sessionId:String = "" ){
+        public init(location:String, dataChannelName:String, sessionId:String = "" ){
             self.location = location
             self.dataChannelName = dataChannelName
-            self.id = dataChannelName
-            self.status = dataChannelName
             self.sessionId = dataChannelName
         }
     }
