@@ -97,22 +97,6 @@ public class Calls{
         }
     }
     
-    public struct DataChannel : Decodable{
-        public var location : String?
-        public var sessionId : String?
-        public var dataChannelName : String?
-        public var id : String?
-        public var status : String?
-
-        public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String){
-            self.location = location
-            self.sessionId = sessionId
-            self.dataChannelName = dataChannelName
-            self.id = id
-            self.status = status
-        }
-    }
-    
     public struct NewDesc : Encodable, Decodable{
         public var sessionDescription : SessionDescription
         
@@ -197,21 +181,40 @@ public class Calls{
             self.mid = mid
         }
     }
-    
+
     public struct Track : Decodable{
         public var location : String?
         public var trackName : String?
         public var mid : String?
         public var status : String?
+        public var sessionId : String?
        
-        public init(location : String?, trackName :String?, mid:String?, status:String?){
+        public init(location : String?, trackName :String?, mid:String?, status:String?, sessionId:String?){
             self.location = location
             self.trackName = trackName
             self.mid = mid
             self.status = status
+            self.sessionId = sessionId
         }
     }
+    
+    public struct DataChannel : Decodable{
+        public var location : String?
+        public var sessionId : String?
+        public var dataChannelName : String?
+        public var id : String?
+        public var status : String?
 
+        public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String){
+            self.location = location
+            self.sessionId = sessionId
+            self.dataChannelName = dataChannelName
+            self.id = id
+            self.status = status
+        }
+    }
+    
+    
     public struct NewTracksResponse : Decodable{
         public var requiresImmediateRenegotiation : Bool
         public var tracks : [NewTracksRes]
