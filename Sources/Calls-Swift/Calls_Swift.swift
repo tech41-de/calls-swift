@@ -21,7 +21,52 @@ public class Calls{
         self.appId = appId
         self.secret = secret
     }
+    
+    // get Session
+    public struct Track : Decodable{
+        public var location : String?
+        public var trackName : String?
+        public var mid : String?
+        public var status : String?
+        public var sessionId : String?
+       
+        public init(location : String?, trackName :String?, mid:String?, status:String?, sessionId:String?){
+            self.location = location
+            self.trackName = trackName
+            self.mid = mid
+            self.status = status
+            self.sessionId = sessionId
+        }
+    }
+    
+    public struct DataChannel : Decodable{
+        public var location : String?
+        public var sessionId : String?
+        public var dataChannelName : String?
+        public var id : String?
+        public var status : String?
 
+        public init(location:String, sessionId:String?, dataChannelName :String?, id:String?, status:String?){
+            self.location = location
+            self.sessionId = sessionId
+            self.dataChannelName = dataChannelName
+            self.id = id
+            self.status = status
+        }
+    }
+    
+    public struct GetSessionStateResponse: Decodable{
+        public var tracks: [Track]?
+        public var dataChannels: [DataChannel]?
+
+        public init(tracks:[Track], dataChannels: [DataChannel]){
+            self.tracks = tracks
+            self.dataChannels = dataChannels
+        }
+    }
+
+    
+    
     public struct DataChannelLocal : Encodable, Decodable{
         public var location : String = ""
         public var dataChannelName : String = ""
@@ -182,39 +227,6 @@ public class Calls{
         }
     }
 
-    public struct Track : Decodable{
-        public var location : String?
-        public var trackName : String?
-        public var mid : String?
-        public var status : String?
-        public var sessionId : String?
-       
-        public init(location : String?, trackName :String?, mid:String?, status:String?, sessionId:String?){
-            self.location = location
-            self.trackName = trackName
-            self.mid = mid
-            self.status = status
-            self.sessionId = sessionId
-        }
-    }
-    
-    public struct DataChannel : Decodable{
-        public var location : String?
-        public var sessionId : String?
-        public var dataChannelName : String?
-        public var id : String?
-        public var status : String?
-
-        public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String){
-            self.location = location
-            self.sessionId = sessionId
-            self.dataChannelName = dataChannelName
-            self.id = id
-            self.status = status
-        }
-    }
-    
-    
     public struct NewTracksResponse : Decodable{
         public var requiresImmediateRenegotiation : Bool
         public var tracks : [NewTracksRes]
@@ -272,16 +284,6 @@ public class Calls{
             self.sessionDescription = sessionDescription
             self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
             self.tracks = tracks
-        }
-    }
-    
-    public struct GetSessionStateResponse: Decodable{
-        public var tracks: [Track]?
-        public var dataChannels: [DataChannel]?
-
-        public init(tracks:[Track], dataChannels: [DataChannel]){
-            self.tracks = tracks
-            self.dataChannels = dataChannels
         }
     }
     
