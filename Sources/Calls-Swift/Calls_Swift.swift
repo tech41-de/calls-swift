@@ -98,6 +98,22 @@ public class Calls{
         }
     }
     
+    public struct DataChannel : Codable{
+        public var location : String = ""
+        public var sessionId : String = ""
+        public var dataChannelName : String = ""
+        public var id : String = ""
+        public var status : String = ""
+        
+        public init(location:String, sessionId:String, dataChannelName :String, id:String, status:String){
+            self.location = location
+            self.sessionId = sessionId
+            self.dataChannelName = dataChannelName
+            self.id = id
+            self.status = status
+        }
+    }
+    
     public struct NewDesc : Encodable, Decodable{
         public var sessionDescription : SessionDescription
         
@@ -263,7 +279,6 @@ public class Calls{
         public var tracks: [Track]
         public var dataChannels: [Track]
 
-        
         public init(tracks:[Track], dataChannels: [Track]){
             self.tracks = tracks
             self.dataChannels = dataChannels
@@ -501,6 +516,8 @@ public class Calls{
                 return completion(nil,"Invalid Response received from the server")
             }
             
+            let str = String(decoding: responseData, as: UTF8.self)
+            print(str)
             do {
                 let res = try self.decoder.decode(GetSessionStateResponse.self, from: responseData)
                 return completion(res, "")
