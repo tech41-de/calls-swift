@@ -109,8 +109,6 @@ public class Calls{
             dataChannels = try container.decode([DataChannel].self, forKey: .dataChannels)
         }
     }
-
-    
     
     public struct DataChannelLocal : Encodable, Decodable{
         public var location : String = ""
@@ -133,7 +131,7 @@ public class Calls{
         }
     }
 
-    public struct DataChannelLocalResItem :  Decodable{
+    public struct DataChannelLocalResItem : Decodable{
         public var location : String?
         public var dataChannelName : String?
         public var id : String?
@@ -590,8 +588,7 @@ public class Calls{
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
         let data = convertJSONToData(item: dataChannelReq)
-        let str = String(decoding: data!, as: UTF8.self)
-        print(str)
+       
         request.httpBody = data
 
         let task =  session.dataTask(with: request) { data, response, error in
@@ -609,6 +606,8 @@ public class Calls{
                 return completion(nil,"Invalid Response received from the server")
             }
             do {
+                let str = String(decoding: responseData, as: UTF8.self)
+                print(str)
                 let dataChannelRes = try self.decoder.decode(DataChannelLocalRes.self, from: responseData)
                 return completion(dataChannelRes, "")
             } catch let error {
