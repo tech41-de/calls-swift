@@ -55,10 +55,6 @@ public class Calls{
         public var status : String?
         public var sessionId : String?
     }
-    
-    /*
-     {"tracks":[{"location":"local","trackName":"a_900CF0AE-1DB4-44FA-9E00-39F25D74BFE3","mid":"1","status":"active"},{"location":"local","trackName":"v_7E7B5AC7-875D-48EB-B629-D8F2350E6342","mid":"2","status":"active"},{"location":"remote","sessionId":"199672c611810f350895672ea037f22b","trackName":"a_869256E3-45AB-4459-836C-0B8DDAF8EE20","mid":"5","status":"active"},{"location":"remote","sessionId":"199672c611810f350895672ea037f22b","trackName":"v_F70ADF9B-A7EA-4B42-A6D9-3EB67CF0A3AF","mid":"6","status":"active"}],"dataChannels":[{"location":"remote","sessionId":"199672c611810f350895672ea037f22b","dataChannelName":"d_EE60DA09-AF92-404A-81C1-B8A3DC83878F","id":1,"status":"initializing"},{"location":"local","dataChannelName":"d_6EB593D1-64C0-4EB5-A75F-DF94780751B1","id":2,"status":"initializing"}]}
-     */
 
     public struct DataChannel : Decodable{
         
@@ -132,23 +128,23 @@ public class Calls{
     }
 
     public struct DataChannelLocalResItem : Decodable{
-        public var location : String?
-        public var dataChannelName : String?
-        public var id : String?
+        public var location : String
+        public var dataChannelName : String
+        public var id : Int
 
-        public init(location:String?, dataChannelName:String?, id:String?){
+        public init(location:String, dataChannelName:String, id:Int){
             self.location = location
             self.dataChannelName = dataChannelName
             self.id = id
         }
     }
     
-    public struct DataChannelRemoteItem : Encodable, Decodable{
-        public var location : String = ""
-        public var dataChannelName : String = ""
-        public var sessionId : String = ""
+    public struct DataChannelRemoteItem  : Decodable{
+        public var location : String?
+        public var dataChannelName : String?
+        public var sessionId : String?
  
-        public init(location:String, dataChannelName:String, sessionId:String = "" ){
+        public init(location:String?, dataChannelName:String?, sessionId:String?){
             self.location = location
             self.dataChannelName = dataChannelName
             self.sessionId = dataChannelName
