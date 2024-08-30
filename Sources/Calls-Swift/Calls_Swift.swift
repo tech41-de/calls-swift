@@ -133,12 +133,12 @@ public class Calls{
         }
     }
 
-    public struct DataChannelLocalResItem : Encodable, Decodable{
-        public var location : String = ""
-        public var dataChannelName : String = ""
-        public var id : String = ""
+    public struct DataChannelLocalResItem :  Decodable{
+        public var location : String?
+        public var dataChannelName : String?
+        public var id : String?
 
-        public init(location:String, dataChannelName:String, id:String){
+        public init(location:String?, dataChannelName:String?, id:String?){
             self.location = location
             self.dataChannelName = dataChannelName
             self.id = id
