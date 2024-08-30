@@ -116,9 +116,9 @@ public class Calls{
     }
     
     public struct DataChannelRemote : Encodable, Decodable{
-        public var location : String = ""
-        public var dataChannelName : String = ""
-        public var sessionId : String = ""
+        public var location : String
+        public var dataChannelName : String
+        public var sessionId : String
         
         public init(location:String, dataChannelName:String, sessionId : String){
             self.location = location
@@ -140,14 +140,16 @@ public class Calls{
     }
     
     public struct DataChannelRemoteItem  : Decodable{
-        public var location : String?
-        public var dataChannelName : String?
+        public var location : String
+        public var dataChannelName : String
         public var sessionId : String?
+        public var id : Int
  
-        public init(location:String?, dataChannelName:String?, sessionId:String?){
+        public init(location:String, dataChannelName:String, sessionId:String?, id:Int){
             self.location = location
             self.dataChannelName = dataChannelName
             self.sessionId = dataChannelName
+            self.id = id
         }
     }
     
