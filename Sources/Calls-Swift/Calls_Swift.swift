@@ -387,7 +387,6 @@ public class Calls{
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
         let data = convertJSONToData(item: newTracks)
-        let str = String(decoding: data!, as: UTF8.self)
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
@@ -427,7 +426,6 @@ public class Calls{
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
         let data = convertJSONToData(item: newTracksRemote)
-        let str = String(decoding: data!, as: UTF8.self)
         request.httpBody = data
 
         let task =  session.dataTask(with: request) { data, response, error in
@@ -478,16 +476,7 @@ public class Calls{
             if let error = error {
                 return completion( error.localizedDescription)
             }
-            
-            // ensure there is data returned
-            guard let responseData = data else {
-                return completion("Invalid Response received from the server")
-            }
-            do {
-                return completion("OK")
-            } catch let error {
-                return completion(error.localizedDescription)
-            }
+            return completion("OK")
         }
         
         // perform the task
@@ -522,7 +511,7 @@ public class Calls{
             }
             
             do {
-                if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
+                if let _ = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
                     let res = try self.decoder.decode(CloseTracksResponse.self, from: responseData)
                     return completion(res,"")
                 } else {
@@ -561,8 +550,6 @@ public class Calls{
                 return completion(nil,"Invalid Response received from the server")
             }
             
-            let str = String(decoding: responseData, as: UTF8.self)
-            print(str)
             do {
                 let res = try self.decoder.decode(GetSessionStateResponse.self, from: responseData)
                 return completion(res, "")
@@ -604,8 +591,6 @@ public class Calls{
                 return completion(nil,"Invalid Response received from the server")
             }
             do {
-                let str = String(decoding: responseData, as: UTF8.self)
-                print(str)
                 let dataChannelRes = try self.decoder.decode(DataChannelLocalRes.self, from: responseData)
                 return completion(dataChannelRes, "")
             } catch let error {
@@ -627,8 +612,6 @@ public class Calls{
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
         let data = convertJSONToData(item: dataChannelReq)
-        let str = String(decoding: data!, as: UTF8.self)
-        print(str)
         request.httpBody = data
 
         let task =  session.dataTask(with: request) { data, response, error in
@@ -656,7 +639,6 @@ public class Calls{
         // perform the task
         task.resume()
     }
-
 
     func convertJSONToData<T: Encodable>(item: T) -> Data? {
         do {
