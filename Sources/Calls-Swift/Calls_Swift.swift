@@ -483,11 +483,12 @@ public class Calls{
         task.resume()
     }
     
+    //   /apps/{appId}/sessions/{sessionId}/tracks/close:
     public func close(sessionId:String, closeTracksRequest:CloseTracksRequest, completion:  @escaping (_ closeTracksResponse:CloseTracksResponse?,  _ error:String)->()) async{
         let session = URLSession.shared
-        let url = URL(string: serverUrl + appId + "/sessions" + sessionId + "/tracks/close")!
+        let url = URL(string: serverUrl + appId + "/sessions/" + sessionId + "/tracks/close")!
         var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
+        request.httpMethod = "PUT"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type") // change as per server requirements
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
