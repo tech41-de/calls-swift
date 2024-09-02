@@ -22,6 +22,30 @@ public class Calls{
         self.secret = secret
     }
     
+    // New Session
+    public struct NewSessionRequest : Codable{
+        public var sessionDescription : SessionDescription
+        public init(sessionDescription: SessionDescription){
+            self.sessionDescription = sessionDescription
+        }
+    }
+    
+    public struct NewSessionResponse : Codable{
+        public var sessionDescription : SessionDescription
+        public init(sessionDescription:SessionDescription){
+            self.sessionDescription = sessionDescription
+        }
+    }
+    
+    public struct SessionDescription: Codable{
+        public var type : String
+        public var sdp : String
+        public init(type:String, sdp:String){
+            self.type = type
+            self.sdp = sdp
+        }
+    }
+    
     // get Session
     public struct Track : Decodable{
         
@@ -184,24 +208,6 @@ public class Calls{
             self.dataChannels = dataChannels
         }
     }
-    
-    public struct NewDesc : Encodable, Decodable{
-        public var sessionDescription : SessionDescription
-        
-        public init(sessionDescription:SessionDescription){
-            self.sessionDescription = sessionDescription
-        }
-    }
-
-    public struct SessionDescription : Codable{
-        public var type :String
-        public var sdp :String
-       
-        public init(type:String, sdp :String){
-            self.type = type
-            self.sdp = sdp
-        }
-    }
 
     public struct SessionDescriptionOffer : Codable{
         public var sessionDescription : SessionDescription
@@ -340,7 +346,7 @@ public class Calls{
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
         let newReq = SessionDescription(type:"offer", sdp:sdp)
-        let desc = NewDesc(sessionDescription:newReq)
+        let desc = NewSessionRequest(sessionDescription:newReq)
         let data = convertJSONToData(item: desc)
         request.httpBody = data
         
@@ -362,7 +368,7 @@ public class Calls{
             do {
                 if let jsonResponse = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
                    
-                    let desc = try self.decoder.decode(NewDesc.self, from: responseData)
+                    let desc = try self.decoder.decode(NewSessionRequest.self, from: responseData)
                     let sessionIdStr =  jsonResponse["sessionId"]
                     return completion(sessionIdStr as! String, desc.sessionDescription.sdp,"")
                 } else {
@@ -454,7 +460,7 @@ public class Calls{
         task.resume()
     }
     
-    public func renegotiate(sessionId:String, sdp: NewDesc, completion:  @escaping (_ error:String)->()) async{
+    public func renegotiate(sessionId:String, sdp: SessionDescription, completion:  @escaping (_ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/renegotiate")!
         var request = URLRequest(url: url)
