@@ -37,6 +37,20 @@ public class Calls{
         }
     }
     
+    public struct RenegotiateRequest : Codable{
+        public var sessionDescription : SessionDescription
+        public init(sessionDescription: SessionDescription){
+            self.sessionDescription = sessionDescription
+        }
+    }
+    
+    public struct RenegotiateResponse : Encodable{
+        public var sessionDescription : SessionDescription
+        public init(sessionDescription:SessionDescription){
+            self.sessionDescription = sessionDescription
+        }
+    }
+    
     public struct SessionDescription: Codable{
         public var type : String
         public var sdp : String
@@ -469,7 +483,8 @@ public class Calls{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        let data = convertJSONToData(item: sessionDescription)
+        let r = RenegotiateRequest(sessionDescription: sessionDescription)
+        let data = convertJSONToData(item: r)
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in

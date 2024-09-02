@@ -435,7 +435,7 @@ components:
       type: object
       properties:
         sessionDescription:
-          $ref: "#/components/schemas/SessionDescription"
+          $ref: "#/components/schemas/SessionDescriptionSessionDescription"
         tracks:
           type: array
           items:
