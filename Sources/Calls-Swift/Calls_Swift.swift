@@ -339,11 +339,11 @@ public class Calls{
     }
     
     public struct CloseTracksResponse : Decodable{
-        public var sessionDescription:SessionDescription
+        public var sessionDescription:SessionDescription?
         public var tracks: [CloseTrackObject]
         public var requiresImmediateRenegotiation : Bool
         
-        public init(sessionDescription:SessionDescription, requiresImmediateRenegotiation : Bool, tracks: [CloseTrackObject]){
+        public init(sessionDescription:SessionDescription?, requiresImmediateRenegotiation : Bool, tracks: [CloseTrackObject]){
             self.sessionDescription = sessionDescription
             self.requiresImmediateRenegotiation = requiresImmediateRenegotiation
             self.tracks = tracks
