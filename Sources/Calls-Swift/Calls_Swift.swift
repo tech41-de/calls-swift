@@ -532,6 +532,8 @@ public class Calls{
                 return completion(nil,"Invalid Response received from the server")
             }
             
+            let str = String(decoding: responseData, as: UTF8.self)
+            print(str)
             do {
                 if let _ = try JSONSerialization.jsonObject(with: responseData, options: .mutableContainers) as? [String: Any] {
                     let res = try self.decoder.decode(CloseTracksResponse.self, from: responseData)
