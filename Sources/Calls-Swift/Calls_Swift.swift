@@ -460,7 +460,7 @@ public class Calls{
         task.resume()
     }
     
-    public func renegotiate(sessionId:String, sdp: SessionDescription, completion:  @escaping (_ error:String)->()) async{
+    public func renegotiate(sessionId:String, sessionDescription: SessionDescription, completion:  @escaping (_ error:String)->()) async{
         let session = URLSession.shared
         let url = URL(string: serverUrl + appId + "/sessions/" +  sessionId + "/renegotiate")!
         var request = URLRequest(url: url)
@@ -469,7 +469,7 @@ public class Calls{
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         
-        let data = convertJSONToData(item: sdp)
+        let data = convertJSONToData(item: sessionDescription)
         request.httpBody = data
         
         let task =  session.dataTask(with: request) { data, response, error in
